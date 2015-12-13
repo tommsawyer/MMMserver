@@ -36,7 +36,8 @@ module.exports = function (logger) {
     };
 
     CompanySchema.methods.toJSON = function () {
-        return {
+        var company =  {
+            id: this._id,
             name: this.name,
             INN: this.INN,
             OGRN: this.OGRN,
@@ -45,6 +46,8 @@ module.exports = function (logger) {
             address: this.address,
             logo: this.logo
         };
+
+        return company;
     };
 
 

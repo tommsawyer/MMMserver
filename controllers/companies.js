@@ -17,8 +17,9 @@ router.get('/all', (req, res) => {
             req.logger.warn('На сервере нет ни одной компании!');
         }
 
-        var comp = companies.map((company) => {company.toJSON()});
+        var comp = companies.map((company) => {return company.toJSON()});
 
+        req.logger.info('Отправляю все компании пользователю. Всего ' + comp.length);
         res.end(req.msgGenerator.generateJSON('companies', comp));
     });
 });

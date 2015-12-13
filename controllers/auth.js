@@ -18,7 +18,7 @@ router.post('/register/user', checkLoginAndPassword, (req, res) => {
 
 });
 
-router.post('/register/company', companyLogo('logo'), checkLoginAndPassword, (req, res) => {
+router.post('/register/company', companyLogo.single('logo'), checkLoginAndPassword, (req, res) => {
     var pathToLogo = req.file.path;
 
     var Company = mongoose.model('Company');

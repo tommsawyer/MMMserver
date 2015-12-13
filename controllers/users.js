@@ -18,8 +18,15 @@ router.post('/addstock', (req, res) => {
         }
 
         req.user.stocks += stock._id;
-        res.end(req.msgGenerator.generateJSON('subscribeStock', 'OK'));
-        req.logger.info();
+        req.user.save((err, user) => {
+            if (err) {
+                req.logger.error(err);
+                throw err;
+            }
+
+            res.end(req.msgGenerator.generateJSON('subscribeStock', 'OK'));
+            req.logger.info('Юзер ' + user.login + ' подписался на акцию ' + stock._id);
+        });
     });
 });
 
