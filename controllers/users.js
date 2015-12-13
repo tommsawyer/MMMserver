@@ -17,7 +17,7 @@ router.post('/addstock', (req, res) => {
             return;
         }
 
-        req.users.stocks += stock._id;
+        req.user.stocks += stock._id;
         res.end(req.msgGenerator.generateJSON('subscribeStock', 'OK'));
         req.logger.info();
     });
