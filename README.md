@@ -1,3 +1,8 @@
-The OpenShift `nodejs` cartridge documentation can be found at:
+**MMM API server**
 
-http://openshift.github.io/documentation/oo_cartridge_guide.html#nodejs
+Сервер для проекта МММ.
+
+Ссылки:
+
++ [Серверная доска трелло](https://trello.com/b/YlfJr12S/mmm-server)
++ [Таблица с API](https://docs.google.com/document/d/1isxEo3Gyzm2L_i7EM5JoGRpRbQgqnH09YXQgxRi4cwo)

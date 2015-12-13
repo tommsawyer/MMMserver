@@ -8,6 +8,9 @@
     "application",
     "openshift"
   ],
+  "scripts": {
+    "start": "node index.js"
+  },
   "author": {
     "name": "OpenShift",
     "email": "ramr@example.org",
@@ -18,18 +21,19 @@
     "type": "git",
     "url": "https://github.com/openshift/origin-server"
   },
-
   "engines": {
-    "node": ">= 0.6.0",
-    "npm": ">= 1.0.0"
+    "node": ">= 5.0.0",
+    "npm": ">= 3.3.12"
   },
-
   "dependencies": {
-    "express": "~3.4.4"
+    "body-parser": "^1.14.1",
+    "crypto-js": "^3.1.5",
+    "express": "*",
+    "mongoose": "^4.2.8",
+    "multer": "^1.1.0"
   },
   "devDependencies": {},
   "bundleDependencies": [],
-
   "private": true,
-  "main": "server.js"
+  "main": "index.js"
 }
