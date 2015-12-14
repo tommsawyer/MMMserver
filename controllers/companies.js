@@ -24,4 +24,9 @@ router.get('/all', (req, res) => {
     });
 });
 
+router.get('/me', mw.requireCompanyAuth, (req, res) => {
+    req.logger.info('Присылаю информацию о компании ' + req.company._id);
+    res.end(req.msgGenerator.generateJSON('company', req.company.toJSON()));
+});
+
 module.exports = router;
