@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var mw       = require('../utils/middlewares.js');
 var ObjectID = require('mongodb').ObjectID;
 
-router.use(mw.requireUserAuth);
+router.use(mw.requireClientAuth);
 
 router.post('/addstock', (req, res) => {
     var Stock = mongoose.model('Stock');

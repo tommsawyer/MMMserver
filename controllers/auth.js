@@ -1,18 +1,21 @@
 var express = require('express');
-var router  = express.Router();
+var router = express.Router();
 var mongoose = require('mongoose');
+var Client = mongoose.model('Client');
 var checkLoginAndPassword = require('../utils/middlewares').checkLoginAndPassword;
 var multer = require('multer'); // миддлвеар для загрузки файлов
 var companyLogo = multer({dest: 'public/companies'});
 
 router.post('/register/user', checkLoginAndPassword, (req, res) => {
-    var User = mongoose.model('User');
-    var user = new User(req.body);
+    var client = new Client(req.body);
 
-    user.save((err, user) => {
-        if (err) throw err;
-        req.logger.info('Создал нового пользователя ' + user.login);
-        res.end(req.msgGenerator.generateJSON('register', user.getToken()));
+    client.save((err, client) => {
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        req.logger.info('Создал нового пользователя ' + client.login);
+        res.end(req.msgGenerator.generateJSON('register', client.getToken()));
         req.logger.info('Отправил клиенту токен нового пользователя');
     });
 
@@ -36,6 +39,20 @@ router.post('/register/company', companyLogo.single('logo'), checkLoginAndPasswo
     });
 });
 
+router.post('/authorize/user', (req, res) => {
+    Client.authorize(req.body.login, req.body.password, (err, client) => {
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        var token = client.getToken();
+
+        req.logger.info('Авторизовался пользователь ' + req.body.login);
+        res.end(req.msgGenerator.generateJSON('token', token));
+    });
+});
+
+
 router.post('/authorize', (req, res) => {
     var User = null;
     var token = null;
@@ -50,7 +67,7 @@ router.post('/authorize', (req, res) => {
         User = mongoose.model('Company');
     }
 
-    User.findOne({login: req.body.login}, function(err, user){
+    User.findOne({login: req.body.login}, function (err, user) {
         if (err) throw err;
         if (!user) {
             req.logger.warn('Не найден юзер с логином ' + req.body.login);
@@ -58,7 +75,7 @@ router.post('/authorize', (req, res) => {
             return;
         }
 
-        if (user.checkPassword(req.body.password)){
+        if (user.checkPassword(req.body.password)) {
             token = user.getToken();
             req.logger.info('Авторизовался пользователь ' + req.body.login);
             res.end(req.msgGenerator.generateJSON('token', token));
@@ -66,7 +83,6 @@ router.post('/authorize', (req, res) => {
             req.logger.warn('Попытка авторизации с неправильным паролем пользователя ' + req.body.login);
             res.end(req.msgGenerator.generateJSON('error', 'Неправильный пароль'));
         }
-
     });
 });
 

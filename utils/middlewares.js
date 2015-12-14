@@ -45,12 +45,12 @@ module.exports = {
         });
     },
 
-    requireUserAuth: function(req, res, next) {
-        var User = mongoose.model('User');
+    requireClientAuth: function(req, res, next) {
+        var Client = mongoose.model('Client');
 
         var token = req.body.token || req.query.token;
 
-        User.findOne({'token.value': token}, (err, user) => {
+        Client.findOne({'token.value': token}, (err, user) => {
             if (err) throw err;
 
             if (!user || !token) {

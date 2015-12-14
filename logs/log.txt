@@ -395,3 +395,91 @@
 20:10:29 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
 20:10:31 -- (INFO) GET /companies/all
 20:10:31 -- (INFO) Отправляю все компании пользователю. Всего 25
+20:32:01 -- (INFO) Подключил модель User
+20:32:01 -- (INFO) Подключил модель Stock
+20:32:01 -- (INFO) Подключил модель Company
+20:32:01 -- (INFO) Подключил контроллеры, настроил роуты
+20:32:01 -- (INFO) Сервер запущен на порте 8080
+20:32:01 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
+20:32:08 -- (INFO) POST /stocks/create
+20:32:08 -- (WARN) Не найдена компания с токеном undefined
+20:32:08 -- (INFO) GET /favicon.ico
+20:32:08 -- (WARN) Неизвестный путь запроса GET /favicon.ico
+20:33:19 -- (INFO) POST /stocks/create
+20:33:19 -- (INFO) Сохраняю акцию 566dabdf4e49342a287290aa
+20:34:27 -- (INFO) Подключил модель User
+20:34:27 -- (INFO) Подключил модель Stock
+20:34:27 -- (INFO) Подключил модель Company
+20:34:27 -- (INFO) Подключил контроллеры, настроил роуты
+20:34:27 -- (INFO) Сервер запущен на порте 8080
+20:34:27 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
+20:34:37 -- (INFO) POST /stocks/create
+20:34:37 -- (INFO) Сохраняю акцию 566dac2d1132e9372921e394
+20:36:02 -- (INFO) Подключил модель User
+20:36:02 -- (INFO) Подключил модель Stock
+20:36:02 -- (INFO) Подключил модель Company
+20:36:02 -- (INFO) Подключил контроллеры, настроил роуты
+20:36:02 -- (INFO) Сервер запущен на порте 8080
+20:36:02 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
+20:36:05 -- (INFO) POST /stocks/create
+20:36:06 -- (INFO) Сохраняю акцию 566dac86f685c47429094d26
+20:36:21 -- (INFO) GET /stocks/f044ea01466a9092dd6be803b2abf815.jpg
+20:36:21 -- (WARN) Неизвестный путь запроса GET /stocks/f044ea01466a9092dd6be803b2abf815.jpg
+20:38:06 -- (INFO) Подключил модель User
+20:38:06 -- (INFO) Подключил модель Stock
+20:38:06 -- (INFO) Подключил модель Company
+20:38:06 -- (INFO) Подключил контроллеры, настроил роуты
+20:38:06 -- (INFO) Сервер запущен на порте 8080
+20:38:06 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
+20:38:19 -- (INFO) POST /stocks/create
+20:38:19 -- (INFO) Сохраняю акцию 566dad0b43f9fbb6296b531e
+16:10:19 -- (INFO) Подключил модель User
+16:10:20 -- (INFO) Сервер запущен на порте 8080
+16:10:19 -- (INFO) Подключил модель Stock
+16:10:19 -- (INFO) Подключил модель Company
+16:10:19 -- (INFO) Подключил контроллеры, настроил роуты
+16:10:20 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
+16:11:14 -- (INFO) POST /stocks/create
+16:11:14 -- (INFO) Сохраняю акцию 566ebff2b9c6596a13cc929f
+16:11:15 -- (INFO) GET /favicon.ico
+16:11:15 -- (WARN) Неизвестный путь запроса GET /favicon.ico
+17:20:27 -- (INFO) Подключил абстрактный класс для компании и клиента
+17:20:27 -- (INFO) Подключил модель Stock
+17:20:27 -- (INFO) Подключил модель Client
+17:20:27 -- (INFO) Подключил модель Company
+17:20:27 -- (INFO) Подключил контроллеры, настроил роуты
+17:20:27 -- (INFO) Сервер запущен на порте 8080
+17:20:27 -- (INFO) Соединился с БД, адрес mongodb://localhost/test
+17:21:25 -- (INFO) POST /auth/register/user
+17:21:26 -- (INFO) Сохраняю пользователя newuser (id = 566ed065993494ec1924f6dc)
+17:21:26 -- (INFO) Создал нового пользователя newuser
+17:21:26 -- (INFO) Токен пользователя newuser устарел или не существует
+17:21:26 -- (INFO) Сгенерировал новый токен(54821f416f7e9e365fe647d2e803c1e8c11b8bc4667f0f9b9d2df8868ae5641c)
+17:21:26 -- (INFO) Отправил клиенту токен нового пользователя
+17:21:26 -- (INFO) Сохраняю пользователя newuser (id = 566ed065993494ec1924f6dc)
+17:22:43 -- (INFO) POST /auth/register/user
+17:22:43 -- (WARN) Некорректный пароль при регистрации: aks
+17:23:10 -- (INFO) POST /auth/register/user
+17:23:10 -- (INFO) Сохраняю пользователя newuser2 (id = 566ed0ce993494ec1924f6dd)
+17:23:10 -- (INFO) Создал нового пользователя newuser2
+17:23:10 -- (INFO) Токен пользователя newuser2 устарел или не существует
+17:23:10 -- (INFO) Сгенерировал новый токен(65437f727d1d38f65e6e2047e348ed51a2964e162ef17d4892e84786d15ad5a9)
+17:23:10 -- (INFO) Отправил клиенту токен нового пользователя
+17:23:10 -- (INFO) Сохраняю пользователя newuser2 (id = 566ed0ce993494ec1924f6dd)
+17:23:34 -- (INFO) POST /auth/authorize/user
+17:23:34 -- (ERROR!) Неправильный пароль
+    at /home/tom_sawyer/work/MMM/mmmapi/models/user.js:65:26
+    at Query.<anonymous> (/home/tom_sawyer/work/MMM/mmmapi/models/user.js:51:13)
+    at /home/tom_sawyer/work/MMM/mmmapi/node_modules/kareem/index.js:177:19
+    at /home/tom_sawyer/work/MMM/mmmapi/node_modules/kareem/index.js:109:16
+    at doNTCallback0 (node.js:428:9)
+    at process._tickCallback (node.js:357:13)
+17:23:42 -- (INFO) POST /auth/authorize/user
+17:23:42 -- (INFO) Авторизовался пользователь newuser2
+17:24:49 -- (INFO) POST /auth/authorize/user
+17:24:49 -- (ERROR!) Не найден юзер с логином newus2
+    at Query.<anonymous> (/home/tom_sawyer/work/MMM/mmmapi/models/user.js:47:26)
+    at /home/tom_sawyer/work/MMM/mmmapi/node_modules/kareem/index.js:177:19
+    at /home/tom_sawyer/work/MMM/mmmapi/node_modules/kareem/index.js:109:16
+    at doNTCallback0 (node.js:428:9)
+    at process._tickCallback (node.js:357:13)

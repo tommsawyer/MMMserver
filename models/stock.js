@@ -1,6 +1,6 @@
 module.exports = function (logger) {
     var mongoose = require('mongoose');
-    var Schema   = mongoose.Schema;
+    var Schema = mongoose.Schema;
     var ObjectID = require('mongodb').ObjectID;
 
     var StockSchema = new Schema({
@@ -12,15 +12,21 @@ module.exports = function (logger) {
         endDate: Date
     });
 
-    StockSchema.methods.addLogo = function(file) {
-        if (!file) {this.logo = ''; return;}
-
+    StockSchema.methods.addLogo = function (file) {
+        if (!file) {
+            this.logo = '';
+            return;
+        }
         this.logo = file.path.split('/').slice(1).join('/'); // отрезаем "public/"
+    };
+
+    StockSchema.methods.checkOwner = function (companyID) {
+        return this.company == companyID;
     };
 
     StockSchema.methods.toJSON = function () {
         var self = this;
-        return new Promise(function(resolve) {
+        return new Promise(function (resolve) {
             var Company = mongoose.model('Company');
             Company.findOne({'_id': new ObjectID(self.company)}, (err, company) => {
                 if (err) {
@@ -38,7 +44,7 @@ module.exports = function (logger) {
                     logo: self.logo,
                     company: {
                         name: company.name,
-                        id  : company._id
+                        id: company._id
                     },
                     startDate: self.startDate,
                     endDate: self.endDate
@@ -47,42 +53,48 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.allToJSON = function(callback){
+    StockSchema.statics.allToJSON = function (callback) {
         this.find({}, (err, stocks) => {
-            if (err){
+            if (err) {
                 logger.error(err);
                 throw err;
             }
 
             var promises = [];
-            stocks.forEach((stock) => {promises.push(stock.toJSON())});
+            stocks.forEach((stock) => {
+                promises.push(stock.toJSON())
+            });
 
-            Promise.all(promises).then(function(stocks){
+            Promise.all(promises).then(function (stocks) {
                 callback(stocks);
             });
         });
     };
 
-    StockSchema.statics.byCompanyID = function(companyID, callback){
+    StockSchema.statics.byCompanyID = function (companyID, callback) {
         this.find({'company': companyID}, (err, stocks) => {
             if (err) {
                 logger.error(err);
                 throw err;
             }
 
-            if (stocks.length == 0){
+            if (stocks.length == 0) {
                 logger.info('У компании ' + companyID + ' нет акций');
                 callback([]);
                 return;
             }
 
             var promises = [];
-            stocks.forEach((stock) => {promises.push(stock.toJSON())});
-            Promise.all(promises).then((stocks) => {callback(stocks);});
+            stocks.forEach((stock) => {
+                promises.push(stock.toJSON())
+            });
+            Promise.all(promises).then((stocks) => {
+                callback(stocks);
+            });
         });
     };
 
-    StockSchema.statics.byFilter = function(companyID, category, callback){
+    StockSchema.statics.byFilter = function (companyID, category, callback) {
         this.find({'company': companyID, 'category': category}, (err, stocks) => {
             if (err) {
                 logger.error(err);
@@ -96,12 +108,34 @@ module.exports = function (logger) {
             }
 
             var promises = [];
-            stocks.forEach((stock) => {promises.push(stock.toJSON())});
-            Promise.all(promises).then((stocks) => {callback(stocks);});
+            stocks.forEach((stock) => {
+                promises.push(stock.toJSON())
+            });
+            Promise.all(promises).then((stocks) => {
+                callback(stocks);
+            });
         });
     };
 
-    StockSchema.pre('save', function(next){
+    StockSchema.statics.getByID = function (id, callback) {
+        this.findOne({'id': id}, (err, stock) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            if (!stock) {
+                callback(new Error('Нет акции с айди ' + id));
+                return;
+            }
+
+            stock.toJSON().then((stock) => {
+                callback(null, stock);
+            });
+        });
+    };
+
+    StockSchema.pre('save', function (next) {
         logger.info('Сохраняю акцию ' + this._id);
         next();
     });
