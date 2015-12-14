@@ -1,10 +1,12 @@
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
-var Client = mongoose.model('Client');
+var express               = require('express');
+var router                = express.Router();
+var mongoose              = require('mongoose');
+var storages              = require('../utils/storages.js');
+var Client                = mongoose.model('Client');
+var Company               = mongoose.model('Company');
 var checkLoginAndPassword = require('../utils/middlewares').checkLoginAndPassword;
-var multer = require('multer'); // миддлвеар для загрузки файлов
-var companyLogo = multer({dest: 'public/companies'});
+var multer                = require('multer'); // миддлвеар для загрузки файлов
+var companyLogo           = multer({storage: storages.companyStorage});
 
 router.post('/register/user', checkLoginAndPassword, (req, res) => {
     var client = new Client(req.body);
@@ -22,16 +24,16 @@ router.post('/register/user', checkLoginAndPassword, (req, res) => {
 });
 
 router.post('/register/company', companyLogo.single('logo'), checkLoginAndPassword, (req, res) => {
-    var pathToLogo = req.file.path;
-
-    var Company = mongoose.model('Company');
-
     Company.create({
         login: req.body.login,
         password: req.body.login,
-        logo: req.body.login,
+        logo: '/companies/' + req.file.filename
     }, (err, company) => {
-        if (err) throw err;
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        console.log(company);
 
         req.logger.info('Создал новую компанию ' + company.login);
         res.end(req.msgGenerator.generateJSON('register', company.getToken()));
@@ -53,36 +55,16 @@ router.post('/authorize/user', (req, res) => {
 });
 
 
-router.post('/authorize', (req, res) => {
-    var User = null;
-    var token = null;
-
-    if (!req.body.type) {
-        req.logger.warn('В запросе авторизации не указан тип. Считаю, что это компания');
-    }
-
-    if (req.body.type == 'user') {
-        User = mongoose.model('User');
-    } else {
-        User = mongoose.model('Company');
-    }
-
-    User.findOne({login: req.body.login}, function (err, user) {
-        if (err) throw err;
-        if (!user) {
-            req.logger.warn('Не найден юзер с логином ' + req.body.login);
-            res.end(req.msgGenerator.generateJSON('error', 'Не найден юзер'));
+router.post('/authorize/company', (req, res) => {
+    Company.authorize(req.body.login, req.body.password, (err, company) => {
+        if (req.msgGenerator.generateError(err, req, res)) {
             return;
         }
 
-        if (user.checkPassword(req.body.password)) {
-            token = user.getToken();
-            req.logger.info('Авторизовался пользователь ' + req.body.login);
-            res.end(req.msgGenerator.generateJSON('token', token));
-        } else {
-            req.logger.warn('Попытка авторизации с неправильным паролем пользователя ' + req.body.login);
-            res.end(req.msgGenerator.generateJSON('error', 'Неправильный пароль'));
-        }
+        var token = company.getToken();
+
+        req.logger.info('Авторизовалась компания ' + req.body.login);
+        res.end(req.msgGenerator.generateJSON('token', token));
     });
 });
 

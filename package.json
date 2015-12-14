@@ -29,6 +29,7 @@
     "body-parser": "^1.14.1",
     "crypto-js": "^3.1.5",
     "express": "*",
+    "mime": "^1.3.4",
     "mongoose": "^4.2.8",
     "multer": "^1.1.0"
   },

@@ -29,6 +29,13 @@ module.exports = function (logger) {
         return company;
     };
 
+    CompanySchema.methods.addLogo = function(filename){
+        if (!filename) {
+            return;
+        }
+        this.logo = '/companies/' + filename;
+    };
+
     User.discriminator('Company', CompanySchema);
     logger.info('Подключил модель Company');
 };
