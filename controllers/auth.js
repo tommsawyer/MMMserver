@@ -27,6 +27,9 @@ router.post('/register/company', companyLogo.single('logo'), checkLoginAndPasswo
     Company.create({
         login: req.body.login,
         password: req.body.login,
+        name: req.body.name,
+        INN: req.body.INN,
+        OGRN: req.body.OGRN,
         logo: '/companies/' + req.file.filename
     }, (err, company) => {
         if (req.msgGenerator.generateError(err, req, res)) {
