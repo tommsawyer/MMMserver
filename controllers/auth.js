@@ -26,7 +26,7 @@ router.post('/register/user', checkLoginAndPassword, (req, res) => {
 router.post('/register/company', companyLogo.single('logo'), checkLoginAndPassword, (req, res) => {
     Company.create({
         login: req.body.login,
-        password: req.body.login,
+        password: req.body.password,
         name: req.body.name,
         INN: req.body.INN,
         OGRN: req.body.OGRN,
