@@ -8,7 +8,7 @@ class MessagesGenerator {
         var obj = {
             type: type,
             data: message
-        }
+        };
 
         return JSON.stringify(obj);
     }

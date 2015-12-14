@@ -33,8 +33,6 @@ router.post('/register/company', companyLogo.single('logo'), checkLoginAndPasswo
             return;
         }
 
-        console.log(company);
-
         req.logger.info('Создал новую компанию ' + company.login);
         res.end(req.msgGenerator.generateJSON('register', company.getToken()));
         req.logger.info('Отправил клиенту токен новой компании');

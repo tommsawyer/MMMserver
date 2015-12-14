@@ -17,7 +17,7 @@ module.exports = function (logger) {
             this.logo = '';
             return;
         }
-        this.logo = file.path.split('/').slice(1).join('/'); // отрезаем "public/"
+        this.logo = '/stocks/' + file.filename;
     };
 
     StockSchema.methods.checkOwner = function (companyID) {

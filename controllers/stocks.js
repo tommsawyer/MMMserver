@@ -5,7 +5,8 @@ var mw = require('../utils/middlewares.js');
 var Stock = mongoose.model('Stock');
 var ObjectID = require('mongodb').ObjectID;
 var multer = require('multer'); // миддлвеар для загрузки файлов
-var stockLogo = multer({dest: 'public/stocks'});
+var storages = require('../utils/storages.js');
+var stockLogo = multer({storage: storages.stockStorage});
 
 router.post('/create', stockLogo.single('logo'), mw.requireCompanyAuth, (req, res) => {
     if (!req.file) {
