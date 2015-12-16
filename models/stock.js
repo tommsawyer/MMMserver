@@ -8,9 +8,16 @@ module.exports = function (logger) {
         description: String,
         company: String,
         logo: String,
+        subscribes: [String],
         startDate: Date,
         endDate: Date
     });
+
+    StockSchema.methods.addSubscriber = function (id) {
+        logger.info('Добавляю подписчика к акции ' + this._id);
+        this.subscribes.push(id);
+        this.save();
+    };
 
     StockSchema.methods.addLogo = function (file) {
         if (!file) {
@@ -42,10 +49,7 @@ module.exports = function (logger) {
                     description: self.description,
                     id: self._id,
                     logo: self.logo,
-                    company: {
-                        name: company.name,
-                        id: company._id
-                    },
+                    company: company.toJSON(),
                     startDate: self.startDate,
                     endDate: self.endDate
                 });

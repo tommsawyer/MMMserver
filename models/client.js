@@ -1,7 +1,8 @@
 module.exports = function (logger) {
     var mongoose = require('mongoose');
-    var Schema   = mongoose.Schema;
-    var User     = mongoose.model('User');
+    var Schema = mongoose.Schema;
+    var ObjectID = require('mongodb').ObjectID;
+    var User = mongoose.model('User');
 
     var ClientSchema = new Schema({
         address: String,
@@ -10,8 +11,68 @@ module.exports = function (logger) {
         friends: [{id: String}],
         mail: String,
         phone: String,
-        stocks: [{id: String, name: String}]
+        stocks: [String]
     });
+
+
+    ClientSchema.methods.getSubscribitions = function (callback) {
+        var Stock = mongoose.model('Stock');
+        var subscribitions = this.stocks.map((id) => {return new ObjectID(id)});
+
+
+        if (subscribitions.length == 0) {
+            callback(null, []);
+            return;
+        }
+
+        Stock.find({_id: {$in: subscribitions}}, (err, stocks) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            var promises = [];
+
+            stocks.forEach((stock) => {
+                promises.push(stock.toJSON())
+            });
+
+            Promise.all(promises).then(function (stocks) {
+                callback(null, stocks);
+            });
+
+
+        });
+    };
+
+    ClientSchema.methods.subscribe = function (id, callback) {
+        var Stock = mongoose.model('Stock');
+
+        Stock.findOne({_id: new ObjectID(id)}, (err, stock) => {
+            if (err) {
+                callback(err);
+            }
+
+            if (!stock) {
+                req.logger.warn('Не существует акции с айди ' + req.body._id);
+                return;
+            }
+
+            var id = stock._id.toString();
+            var subscribes = this.stocks;
+
+            if (subscribes.indexOf(id) != -1) {
+                req.logger.warn('Попытка подписаться на акцию, которая уже в подписках. Айди ' + req.body._id);
+                callback(new Error('Вы уже подписаны на эту акцию'));
+                return;
+            }
+
+            subscribes.push(id);
+            this.stocks = subscribes;
+            stock.addSubscriber(this._id.toString());
+            callback(null, stock);
+        });
+    };
 
     User.discriminator('Client', ClientSchema);
     logger.info('Подключил модель Client');
