@@ -23,7 +23,9 @@ router.post('/create', stockLogo.single('logo'), mw.requireCompanyAuth, (req, re
     stock.addLogo(req.file);
 
     stock.save((err, stock) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
 
         res.end(req.msgGenerator.generateJSON('stock', stock._id));
     });
@@ -57,6 +59,36 @@ router.post('/edit', stockLogo.single('logo'), mw.requireCompanyAuth, (req, res)
     });
 });
 
+router.post('/remove', mw.requireCompanyAuth, (req, res) => {
+    Stock.findOne({_id: req.body.id}, (err, stock) => {
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        if (!stock) {
+            res.end(req.msgGenerator.generateJSON('error', 'Нет такой акции!'));
+            return;
+        }
+
+        if (stock.company != req.company._id.toString()) {
+            console.log(stock.company);
+            console.log(req.company._id.toString());
+            res.end(req.msgGenerator.generateJSON('error', 'Эта компания не имеет прав для удаления этой акции'));
+            return;
+        }
+
+        stock.prepareRemove((err) => {
+            if (req.msgGenerator.generateError(err, req, res)) {
+                return;
+            }
+
+            res.end(req.msgGenerator.generateJSON('stock', stock._id));
+            req.logger.info('Акция с айди ' + stock._id + ' удалена');
+            stock.remove();
+        });
+    });
+});
+
 router.get('/all', mw.requireClientAuth, (req, res) => {
     Stock.allToJSON(function (stocks) {
         res.end(req.msgGenerator.generateJSON('stock', stocks));
@@ -72,7 +104,9 @@ router.get('/info', mw.requireClientAuth, (req, res) => {
     }
 
     Stock.getByID(new ObjectID(req.query.id), (err, stock) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
 
         req.logger.info('Отправляю информацию о акции с айди ' + req.query.id);
         res.end(req.msgGenerator.generateJSON('stock', stock));
@@ -84,14 +118,6 @@ router.get('/company', mw.requireCompanyAuth, (req, res) => {
         req.logger.info('Отправляю клиенту акции компании ' + req.company.login);
         res.end(req.msgGenerator.generateJSON('stock', stocks));
     });
-});
-
-router.get('/subscribitions', mw.requireClientAuth, (req, res) => {
-
-});
-
-router.get('/byfilter', mw.requireClientAuth, (req, res) => {
-
 });
 
 module.exports = router;

@@ -74,6 +74,18 @@ module.exports = function (logger) {
         });
     };
 
+    ClientSchema.methods.unsubscribe = function(id) {
+        var stockPosition = this.stocks.indexOf(id);
+
+        if (stockPosition == -1) {
+            return false;
+        }
+
+        this.stocks.splice(stockPosition, 1);
+        logger.info('Пользователь ' + this.login + ' отписался от акции ' + id);
+        this.save();
+    };
+
     User.discriminator('Client', ClientSchema);
     logger.info('Подключил модель Client');
 };

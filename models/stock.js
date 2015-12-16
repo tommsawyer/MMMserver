@@ -1,6 +1,7 @@
 module.exports = function (logger) {
     var mongoose = require('mongoose');
-    var Schema = mongoose.Schema;
+    var fs       = require('fs');
+    var Schema   = mongoose.Schema;
     var ObjectID = require('mongodb').ObjectID;
 
     var StockSchema = new Schema({
@@ -29,6 +30,33 @@ module.exports = function (logger) {
 
     StockSchema.methods.checkOwner = function (companyID) {
         return this.company == companyID;
+    };
+
+    StockSchema.methods.prepareRemove = function(callback){
+        var subscribers = this.subscribes;
+        var imgPath     = __dirname + '/../public' + this.logo;
+        var self        = this;
+
+        fs.unlink(imgPath, (err) => {
+            var Client = mongoose.model('Client');
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            Client.find({_id: {$in: subscribers}}, (err, clients) => {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
+                clients.forEach((client) => {client.unsubscribe(self._id.toString())});
+
+                callback(null, 'ok');
+            });
+
+        });
+
     };
 
     StockSchema.methods.toJSON = function () {
