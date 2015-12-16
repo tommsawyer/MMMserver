@@ -29,4 +29,21 @@ router.get('/me', mw.requireCompanyAuth, (req, res) => {
     res.end(req.msgGenerator.generateJSON('company', req.company.toJSON()));
 });
 
+router.get('/info', mw.requireClientAuth, (req, res) => {
+    var companyID = new ObjectID(req.query.id);
+    var Company   = mongoose.model('Company');
+
+    Company.findOne({_id: companyID}, (err, company) => {
+        if (req.msgGenerator.generateError(err, req, res)) {return;}
+
+        if (!company) {
+            res.end(req.msgGenerator.generateJSON('error','Нет такой компании'));
+            return;
+        }
+
+        res.end(req.msgGenerator.generateJSON('company', company.toJSON()));
+    });
+
+});
+
 module.exports = router;
