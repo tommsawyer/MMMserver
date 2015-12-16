@@ -54,7 +54,7 @@ module.exports = function (logger) {
             }
 
             if (!stock) {
-                req.logger.warn('Не существует акции с айди ' + req.body._id);
+                logger.warn('Не существует акции с айди ' + req.body._id);
                 callback(new Error('Нет такой акции'));
                 return;
             }
