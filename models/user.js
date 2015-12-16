@@ -4,8 +4,14 @@ module.exports = function (logger) {
     var SHA256 = require('crypto-js/sha256');
 
     var UserSchema = new Schema({
-        login: String,
-        hashedPassword: String,
+        login: {
+            type: String,
+            required: true
+        },
+        hashedPassword: {
+            type: String,
+            required: true
+        },
         token: {
             value: String,
             createdAt: Date,
