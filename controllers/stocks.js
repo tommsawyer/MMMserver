@@ -70,9 +70,7 @@ router.post('/remove', mw.requireCompanyAuth, (req, res) => {
             return;
         }
 
-        if (stock.company != req.company._id.toString()) {
-            console.log(stock.company);
-            console.log(req.company._id.toString());
+        if (!stock.checkOwner(req.company._id.toString())) {
             res.end(req.msgGenerator.generateJSON('error', 'Эта компания не имеет прав для удаления этой акции'));
             return;
         }
