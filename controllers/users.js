@@ -22,9 +22,8 @@ router.post('/addstock', (req, res) => {
         }
 
         req.user.save((err, user) => {
-            if (err) {
-                req.logger.error(err);
-                throw err;
+            if (req.msgGenerator.generateError(err, req, res)) {
+                return;
             }
 
             res.end(req.msgGenerator.generateJSON('subscribeStock', 'OK'));

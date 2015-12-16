@@ -59,6 +59,8 @@ module.exports = function (logger) {
                 return;
             }
 
+            req.logger.info('Нашел акцию с айди ' + stock._id.toString());
+
             var id = stock._id.toString();
             var subscribes = this.stocks;
 
