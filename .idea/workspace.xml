@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="cdce8c41-4caf-4c81-acd6-3d0812803535" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/stocks.js" afterPath="$PROJECT_DIR$/controllers/stocks.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/auth.js" afterPath="$PROJECT_DIR$/controllers/auth.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/client.js" afterPath="$PROJECT_DIR$/models/client.js" />
     </list>
     <ignored path="mmmapi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,7 +29,7 @@
         <entry file="file://$PROJECT_DIR$/lib/server.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+              <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -63,10 +64,20 @@
         <entry file="file://$PROJECT_DIR$/models/client.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
+              <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
               <folding>
-                <element signature="e#2266#2547#0" expanded="false" />
+                <element signature="e#2248#2529#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="log.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/logs/log.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -91,9 +102,9 @@
         <entry file="file://$PROJECT_DIR$/controllers/auth.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="34" column="101" selection-start-line="34" selection-start-column="101" selection-end-line="34" selection-end-column="101" />
+              <caret line="14" column="56" selection-start-line="14" selection-start-column="56" selection-end-line="14" selection-end-column="56" />
               <folding>
-                <element signature="e#507#1252#0" expanded="false" />
+                <element signature="e#1351#2504#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -111,16 +122,6 @@
                 <element signature="e#3101#3612#0" expanded="false" />
                 <element signature="e#3676#3887#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="log.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/logs/log.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -185,11 +186,11 @@
         <option value="$PROJECT_DIR$/utils/storages.js" />
         <option value="$PROJECT_DIR$/models/stock.js" />
         <option value="$PROJECT_DIR$/controllers/companies.js" />
-        <option value="$PROJECT_DIR$/controllers/auth.js" />
         <option value="$PROJECT_DIR$/models/user.js" />
         <option value="$PROJECT_DIR$/controllers/users.js" />
-        <option value="$PROJECT_DIR$/models/client.js" />
         <option value="$PROJECT_DIR$/controllers/stocks.js" />
+        <option value="$PROJECT_DIR$/controllers/auth.js" />
+        <option value="$PROJECT_DIR$/models/client.js" />
         <option value="$PROJECT_DIR$/logs/log.txt" />
       </list>
     </option>
@@ -539,7 +540,13 @@
       <option name="project" value="LOCAL" />
       <updated>1450305127010</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Картинки в ответе при добавлении акции">
+      <created>1450340460643</created>
+      <option name="number" value="00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1450340460643</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TodoView">
@@ -605,7 +612,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="initial" />
     <MESSAGE value="initial 2" />
     <MESSAGE value="initial 3" />
     <MESSAGE value="4" />
@@ -630,7 +636,8 @@
     <MESSAGE value="Правка небольшого бага при добавлении акции в подписки" />
     <MESSAGE value="Мелкий баг с подпиской на акции" />
     <MESSAGE value="Мелкий баг с подпиской на акции 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Мелкий баг с подпиской на акции 2" />
+    <MESSAGE value="Картинки в ответе при добавлении акции" />
+    <option name="LAST_COMMIT_MESSAGE" value="Картинки в ответе при добавлении акции" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -687,7 +694,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="44" column="34" selection-start-line="44" selection-start-column="34" selection-end-line="44" selection-end-column="34" />
           <folding>
-            <element signature="e#507#1252#0" expanded="false" />
+            <element signature="e#1351#2504#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -719,7 +726,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="7" selection-start-line="41" selection-start-column="7" selection-end-line="41" selection-end-column="7" />
           <folding>
-            <element signature="e#507#1252#0" expanded="false" />
+            <element signature="e#1351#2504#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -965,14 +972,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/company.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -995,16 +994,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/auth.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="101" selection-start-line="34" selection-start-column="101" selection-end-line="34" selection-end-column="101" />
-          <folding>
-            <element signature="e#507#1252#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/user.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1014,16 +1003,6 @@
             <element signature="e#659#729#0" expanded="false" />
             <element signature="e#778#1331#0" expanded="false" />
             <element signature="e#2190#2301#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/client.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
-          <folding>
-            <element signature="e#2266#2547#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1046,6 +1025,34 @@
             <element signature="e#2870#3041#0" expanded="false" />
             <element signature="e#3101#3612#0" expanded="false" />
             <element signature="e#3676#3887#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/auth.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="56" selection-start-line="14" selection-start-column="56" selection-end-line="14" selection-end-column="56" />
+          <folding>
+            <element signature="e#1351#2504#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/client.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
+          <folding>
+            <element signature="e#2248#2529#0" expanded="false" />
           </folding>
         </state>
       </provider>

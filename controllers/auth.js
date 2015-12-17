@@ -12,7 +12,7 @@ router.post('/register/user', checkLoginAndPassword, (req, res) => {
     Client.byLogin(req.body.login, (err, client) => {
         if (client) {
             req.logger.info('Пользователь с логином ' + req.body.login + ' уже существует');
-            res.end(req.msgGenerator.generateJSON('register', 'Пользователь с таким логином уже существует'));
+            res.end(req.msgGenerator.generateJSON('error', 'Пользователь с таким логином уже существует'));
             return;
         }
 
@@ -39,7 +39,7 @@ router.post('/register/company', companyLogo.single('logo'), checkLoginAndPasswo
     Company.byLogin(req.body.login, (err, company) => {
         if (company) {
             req.logger.info('Компания с логином ' + req.body.login + ' уже существует');
-            res.end(req.msgGenerator.generateJSON('register', 'Компания с таким логином уже существует'));
+            res.end(req.msgGenerator.generateJSON('error', 'Компания с таким логином уже существует'));
             return;
         }
 

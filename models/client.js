@@ -59,13 +59,13 @@ module.exports = function (logger) {
                 return;
             }
 
-            req.logger.info('Нашел акцию с айди ' + stock._id.toString());
+            logger.info('Нашел акцию с айди ' + stock._id.toString());
 
             var id = stock._id.toString();
             var subscribes = this.stocks;
 
             if (subscribes.indexOf(id) != -1) {
-                req.logger.warn('Попытка подписаться на акцию, которая уже в подписках. Айди ' + req.body._id);
+                logger.warn('Попытка подписаться на акцию, которая уже в подписках. Айди ' + id);
                 callback(new Error('Вы уже подписаны на эту акцию'));
                 return;
             }
