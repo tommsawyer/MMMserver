@@ -27,7 +27,7 @@ router.post('/create', stockLogo.single('logo'), mw.requireCompanyAuth, (req, re
             return;
         }
 
-        res.end(req.msgGenerator.generateJSON('stock', stock._id));
+        res.end(req.msgGenerator.generateJSON('stock', {id: stock._id, logo: stock.logo}));
     });
 });
 
