@@ -86,12 +86,12 @@ router.post('/remove', mw.requireCompanyAuth, (req, res) => {
 });
 
 router.post('/subscribe', mw.requireClientAuth, (req, res) => {
-    req.user.subscribe(req.body.id, (err, stock) => {
+    req.client.subscribe(req.body.id, (err, stock) => {
         if (req.msgGenerator.generateError(err, req, res)) {
             return;
         }
 
-        req.user.save((err, user) => {
+        req.client.save((err, user) => {
             if (req.msgGenerator.generateError(err, req, res)) {
                 return;
             }
@@ -103,7 +103,7 @@ router.post('/subscribe', mw.requireClientAuth, (req, res) => {
 });
 
 router.get('/feed', mw.requireClientAuth, (req, res) => {
-    req.user.getSubscribitions((err, stocks) => {
+    req.client.getSubscribitions((err, stocks) => {
         if (req.msgGenerator.generateError(err, req, res)) {
             return;
         }
@@ -113,7 +113,7 @@ router.get('/feed', mw.requireClientAuth, (req, res) => {
 });
 
 router.get('/all', mw.requireClientAuth, (req, res) => {
-    Stock.allToJSON(function (stocks) {
+    Stock.allToJSON(req.client._id.toString(), function (stocks) {
         res.end(req.msgGenerator.generateJSON('stock', stocks));
         req.logger.info('Отправил клиенту все акции');
     });

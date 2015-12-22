@@ -54,12 +54,14 @@ module.exports = function (logger) {
 
                 callback(null, 'ok');
             });
-
         });
-
     };
 
-    StockSchema.methods.toJSON = function () {
+    StockSchema.methods.isSubscribed = function(userID) {
+        return this.subscribes.indexOf(userID) != -1;
+    };
+
+    StockSchema.methods.toJSON = function (userID) {
         var self = this;
         return new Promise(function (resolve) {
             var Company = mongoose.model('Company');
@@ -78,6 +80,7 @@ module.exports = function (logger) {
                     id: self._id,
                     logo: self.logo,
                     company: company.toJSON(),
+                    subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
                     startDate: self.startDate,
                     endDate: self.endDate
                 });
@@ -85,7 +88,7 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.allToJSON = function (callback) {
+    StockSchema.statics.allToJSON = function (userID, callback) {
         this.find({}, (err, stocks) => {
             if (err) {
                 logger.error(err);
@@ -94,7 +97,7 @@ module.exports = function (logger) {
 
             var promises = [];
             stocks.forEach((stock) => {
-                promises.push(stock.toJSON())
+                promises.push(stock.toJSON(userID))
             });
 
             Promise.all(promises).then(function (stocks) {

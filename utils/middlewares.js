@@ -79,7 +79,7 @@ module.exports = {
     },
 
     requireAnyAuth: function(req, res, next){
-        if (!req.company && !req.user){
+        if (!req.company && !req.client){
             next(new Error('Доступ запрещен'));
         }
     }
