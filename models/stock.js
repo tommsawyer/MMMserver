@@ -101,6 +101,8 @@ module.exports = function (logger) {
                 return;
             }
 
+            var Client = mongoose.model('Client');
+
             Client.find({_id: {$in: subscribers}}, (err, clients) => {
                 if (err) {
                     callback(err);
