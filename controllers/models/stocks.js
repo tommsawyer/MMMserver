@@ -60,7 +60,7 @@ router.post('/edit', mw.requireCompanyAuth, (req, res) => {
 
             stock.save((err) => {
                 if (req.msgGenerator.generateError(err, req, res)) {return;}
-                res.end(req.msgGenerator.generateJSON('stock', 'успешно'));
+                res.end(req.msgGenerator.generateJSON('stock', stock.logo));
             });
         } else {
             stock.removeImages((err) => {
@@ -75,7 +75,7 @@ router.post('/edit', mw.requireCompanyAuth, (req, res) => {
 
                 stock.save((err) => {
                     if (req.msgGenerator.generateError(err, req, res)) {return;}
-                    res.end(req.msgGenerator.generateJSON('stock', 'успешно'));
+                    res.end(req.msgGenerator.generateJSON('stock', stock.logo));
                 });
             });
         }
