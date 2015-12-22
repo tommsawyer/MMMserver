@@ -20,6 +20,18 @@ module.exports = function (logger) {
         this.save();
     };
 
+    StockSchema.methods.removeSubscriber = function(userID, callback) {
+        var pos = this.subscribes.indexOf(userID);
+
+        if (pos == -1) {
+            callback(new Error('Юзер не подписан на эту акцию'));
+            return;
+        }
+
+        this.subscribes.splice(pos, 1);
+        callback(null);
+    };
+
     StockSchema.methods.addLogo = function (file) {
         if (!file) {
             this.logo = '';
@@ -153,7 +165,7 @@ module.exports = function (logger) {
     };
 
     StockSchema.statics.getByID = function (id, callback) {
-        this.findOne({'id': id}, (err, stock) => {
+        this.findOne({'_id': id}, (err, stock) => {
             if (err) {
                 callback(err);
                 return;

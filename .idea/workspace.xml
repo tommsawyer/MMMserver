@@ -5,7 +5,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/models/stocks.js" afterPath="$PROJECT_DIR$/controllers/models/stocks.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/stock.js" afterPath="$PROJECT_DIR$/models/stock.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/middlewares.js" afterPath="$PROJECT_DIR$/utils/middlewares.js" />
     </list>
     <ignored path="mmmapi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,32 +29,17 @@
         <entry file="file://$PROJECT_DIR$/models/stock.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="90" column="26" selection-start-line="90" selection-start-column="26" selection-end-line="90" selection-end-column="26" />
+              <caret line="167" column="24" selection-start-line="167" selection-start-column="24" selection-end-line="167" selection-end-column="24" />
               <folding>
-                <element signature="e#1791#2804#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/user.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/users/user.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-              <folding>
-                <element signature="e#370#1112#0" expanded="false" />
-                <element signature="e#1182#1537#0" expanded="false" />
+                <element signature="e#469#595#0" expanded="false" />
+                <element signature="e#668#913#0" expanded="false" />
+                <element signature="e#966#1100#0" expanded="false" />
+                <element signature="e#1161#1210#0" expanded="false" />
+                <element signature="e#1271#1935#0" expanded="false" />
+                <element signature="e#2109#3122#0" expanded="false" />
+                <element signature="e#3189#3598#0" expanded="false" />
+                <element signature="e#3670#4264#0" expanded="false" />
+                <element signature="e#4343#4979#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -75,7 +59,7 @@
         <entry file="file://$PROJECT_DIR$/controllers/users/company.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+              <caret line="59" column="45" selection-start-line="59" selection-start-column="45" selection-end-line="59" selection-end-column="45" />
               <folding>
                 <element signature="e#658#1811#0" expanded="false" />
                 <element signature="e#1855#2210#0" expanded="false" />
@@ -84,8 +68,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="users.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/models/users.js">
+      <file leaf-file-name="stocks.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="112" column="23" selection-start-line="112" selection-start-column="23" selection-end-line="112" selection-end-column="23" />
+              <folding>
+                <element signature="e#309#894#0" expanded="false" />
+                <element signature="e#956#1720#0" expanded="false" />
+                <element signature="e#1784#2610#0" expanded="false" />
+                <element signature="e#2676#3157#0" expanded="false" />
+                <element signature="e#3711#3936#0" expanded="false" />
+                <element signature="e#3995#4193#0" expanded="false" />
+                <element signature="e#4823#5034#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="log.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/logs/log.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -94,18 +96,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="stocks.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
+      <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/user.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="105" column="14" selection-start-line="105" selection-start-column="14" selection-end-line="105" selection-end-column="14" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="client.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/client.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <element signature="e#309#894#0" expanded="false" />
-                <element signature="e#956#1720#0" expanded="false" />
-                <element signature="e#1784#2610#0" expanded="false" />
-                <element signature="e#3759#4270#0" expanded="false" />
-                <element signature="e#4329#4540#0" expanded="false" />
+                <element signature="e#1235#2193#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -128,24 +146,15 @@
         <entry file="file://$PROJECT_DIR$/utils/middlewares.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+              <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
               <folding>
                 <element signature="e#108#992#0" expanded="false" />
                 <element signature="e#1043#1563#0" expanded="false" />
                 <element signature="e#1613#2115#0" expanded="false" />
                 <element signature="e#2166#2274#0" expanded="false" />
                 <element signature="e#2324#2431#0" expanded="false" />
+                <element signature="e#2478#2585#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="log.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/logs/log.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -164,9 +173,9 @@
         <option value="$PROJECT_DIR$/controllers/models/companies.js" />
         <option value="$PROJECT_DIR$/controllers/users/user.js" />
         <option value="$PROJECT_DIR$/controllers/users/company.js" />
+        <option value="$PROJECT_DIR$/utils/middlewares.js" />
         <option value="$PROJECT_DIR$/models/stock.js" />
         <option value="$PROJECT_DIR$/controllers/models/stocks.js" />
-        <option value="$PROJECT_DIR$/utils/middlewares.js" />
         <option value="$PROJECT_DIR$/logs/log.txt" />
       </list>
     </option>
@@ -250,7 +259,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
+              <option name="myItemId" value="models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -394,15 +403,30 @@
       <option name="project" value="LOCAL" />
       <updated>1450794524568</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Добавлен флаг подпикси при получении акций пользователем">
+      <created>1450795469992</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1450795469992</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-3" width="1366" height="771" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24962743" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -429,17 +453,23 @@
     <MESSAGE value="Исправление ошибки с добавлением картинок у акций" />
     <MESSAGE value="Исправление ошибки с добавлением картинок у акций 2" />
     <MESSAGE value="Исправление ошибки с добавлением картинок у акций 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправление ошибки с добавлением картинок у акций 3" />
+    <MESSAGE value="Добавлен флаг подпикси при получении акций пользователем" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлен флаг подпикси при получении акций пользователем" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/controllers/models/stocks.js</url>
-          <line>138</line>
+          <line>151</line>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/controllers/models/stocks.js</url>
+          <line>87</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="2" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -449,7 +479,15 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1791#2804#0" expanded="false" />
+            <element signature="e#469#595#0" expanded="false" />
+            <element signature="e#668#913#0" expanded="false" />
+            <element signature="e#966#1100#0" expanded="false" />
+            <element signature="e#1161#1210#0" expanded="false" />
+            <element signature="e#1271#1935#0" expanded="false" />
+            <element signature="e#2109#3122#0" expanded="false" />
+            <element signature="e#3189#3598#0" expanded="false" />
+            <element signature="e#3670#4264#0" expanded="false" />
+            <element signature="e#4343#4979#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -459,7 +497,15 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1791#2804#0" expanded="false" />
+            <element signature="e#469#595#0" expanded="false" />
+            <element signature="e#668#913#0" expanded="false" />
+            <element signature="e#966#1100#0" expanded="false" />
+            <element signature="e#1161#1210#0" expanded="false" />
+            <element signature="e#1271#1935#0" expanded="false" />
+            <element signature="e#2109#3122#0" expanded="false" />
+            <element signature="e#3189#3598#0" expanded="false" />
+            <element signature="e#3670#4264#0" expanded="false" />
+            <element signature="e#4343#4979#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -491,6 +537,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/utils/middlewares.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+          <folding>
+            <element signature="e#108#992#0" expanded="false" />
+            <element signature="e#1043#1563#0" expanded="false" />
+            <element signature="e#1613#2115#0" expanded="false" />
+            <element signature="e#2166#2274#0" expanded="false" />
+            <element signature="e#2324#2431#0" expanded="false" />
+            <element signature="e#2478#2585#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/models/companies.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -503,14 +564,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/users/company.js">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-          <folding>
-            <element signature="e#658#1811#0" expanded="false" />
-            <element signature="e#1855#2210#0" expanded="false" />
-          </folding>
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -522,11 +580,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.js">
+    <entry file="file://$PROJECT_DIR$/models/client.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#1235#2193#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -538,12 +598,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/users/company.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="59" column="45" selection-start-line="59" selection-start-column="45" selection-end-line="59" selection-end-column="45" />
+          <folding>
+            <element signature="e#658#1811#0" expanded="false" />
+            <element signature="e#1855#2210#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/models/stock.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="26" selection-start-line="90" selection-start-column="26" selection-end-line="90" selection-end-column="26" />
+          <caret line="167" column="24" selection-start-line="167" selection-start-column="24" selection-end-line="167" selection-end-column="24" />
           <folding>
-            <element signature="e#1791#2804#0" expanded="false" />
+            <element signature="e#469#595#0" expanded="false" />
+            <element signature="e#668#913#0" expanded="false" />
+            <element signature="e#966#1100#0" expanded="false" />
+            <element signature="e#1161#1210#0" expanded="false" />
+            <element signature="e#1271#1935#0" expanded="false" />
+            <element signature="e#2109#3122#0" expanded="false" />
+            <element signature="e#3189#3598#0" expanded="false" />
+            <element signature="e#3670#4264#0" expanded="false" />
+            <element signature="e#4343#4979#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -551,27 +638,15 @@
     <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="105" column="14" selection-start-line="105" selection-start-column="14" selection-end-line="105" selection-end-column="14" />
+          <caret line="112" column="23" selection-start-line="112" selection-start-column="23" selection-end-line="112" selection-end-column="23" />
           <folding>
             <element signature="e#309#894#0" expanded="false" />
             <element signature="e#956#1720#0" expanded="false" />
             <element signature="e#1784#2610#0" expanded="false" />
-            <element signature="e#3759#4270#0" expanded="false" />
-            <element signature="e#4329#4540#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/middlewares.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#992#0" expanded="false" />
-            <element signature="e#1043#1563#0" expanded="false" />
-            <element signature="e#1613#2115#0" expanded="false" />
-            <element signature="e#2166#2274#0" expanded="false" />
-            <element signature="e#2324#2431#0" expanded="false" />
+            <element signature="e#2676#3157#0" expanded="false" />
+            <element signature="e#3711#3936#0" expanded="false" />
+            <element signature="e#3995#4193#0" expanded="false" />
+            <element signature="e#4823#5034#0" expanded="false" />
           </folding>
         </state>
       </provider>

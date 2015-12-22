@@ -102,6 +102,19 @@ router.post('/subscribe', mw.requireClientAuth, (req, res) => {
     });
 });
 
+router.post('/unsubscribe', mw.requireClientAuth, (req, res) => {
+    Stock.findOne({'_id':new ObjectID(req.body.id)}, (err, stock) => {
+        if (req.msgGenerator.generateError(err, req, res)) {return;}
+
+        stock.removeSubscriber(req.client._id, (err) => {
+            if (req.msgGenerator.generateError(err, req, res)) {return;}
+
+            req.client.unsubscribe(stock._id);
+            res.end(req.msgGenerator.generateJSON('unsubscribestock', 'success'));
+        });
+    });
+});
+
 router.get('/feed', mw.requireClientAuth, (req, res) => {
     req.client.getSubscribitions((err, stocks) => {
         if (req.msgGenerator.generateError(err, req, res)) {
