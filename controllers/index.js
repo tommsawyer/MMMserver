@@ -1,6 +1,4 @@
-exports.Admin     = require('./admin.js');
-exports.Auth      = require('./auth.js');
+exports.Admin    = require('./admin.js');
 
-exports.Stocks    = require('./stocks.js');
-exports.Companies = require('./companies.js');
-exports.Users     = require('./users.js');
+exports.Company  = require('./users/company.js');
+exports.User     = require('./users/user.js');

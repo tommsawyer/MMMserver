@@ -26,7 +26,7 @@ module.exports = {
         next();
     },
 
-    requireCompanyAuth: function(req, res, next) {
+    checkCompanyToken: function(req, res, next) {
         var Company = mongoose.model('Company');
 
         var token = req.body.token || req.query.token;
@@ -45,7 +45,7 @@ module.exports = {
         });
     },
 
-    requireClientAuth: function(req, res, next) {
+    checkClientToken: function(req, res, next) {
         var Client = mongoose.model('Client');
 
         var token = req.body.token || req.query.token;
@@ -59,8 +59,28 @@ module.exports = {
                 return;
             }
 
-            req.user = user;
+            req.client = user;
             next();
         });
+    },
+
+    requireCompanyAuth: function(req, res, next){
+        if (!req.company){
+            next(new Error('Доступ запрещен'));
+        }
+        next();
+    },
+
+    requireClientAuth: function(req, res, next){
+        if (!req.client){
+            next(new Error('Доступ запрещен'));
+        }
+        next();
+    },
+
+    requireAnyAuth: function(req, res, next){
+        if (!req.company && !req.user){
+            next(new Error('Доступ запрещен'));
+        }
     }
 };

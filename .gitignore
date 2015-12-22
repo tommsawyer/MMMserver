@@ -3,4 +3,4 @@
 /public/stocks/?*.*
 /public/users/?*.*
 /public/companies/?*.*
-/logs
+/logs/log.txt

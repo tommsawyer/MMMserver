@@ -1,11 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
-var mw = require('../utils/middlewares.js');
-var Stock = mongoose.model('Stock');
-var ObjectID = require('mongodb').ObjectID;
-var multer = require('multer'); // миддлвеар для загрузки файлов
-var storages = require('../utils/storages.js');
+var express   = require('express');
+var mongoose  = require('mongoose');
+var mw        = require('../../utils/middlewares.js');
+var ObjectID  = require('mongodb').ObjectID;
+var multer    = require('multer'); // миддлвеар для загрузки файлов
+var storages  = require('../../utils/storages.js');
+var Stock     = mongoose.model('Stock');
+var router    = express.Router();
 var stockLogo = multer({storage: storages.stockStorage});
 
 router.post('/create', stockLogo.single('logo'), mw.requireCompanyAuth, (req, res) => {
@@ -20,6 +20,7 @@ router.post('/create', stockLogo.single('logo'), mw.requireCompanyAuth, (req, re
         startDate: new Date(req.body.startDate),
         endDate: new Date(req.body.endDate)
     });
+
     stock.addLogo(req.file);
 
     stock.save((err, stock) => {
@@ -87,6 +88,33 @@ router.post('/remove', mw.requireCompanyAuth, (req, res) => {
     });
 });
 
+router.post('/subscribe', mw.requireClientAuth, (req, res) => {
+    req.user.subscribe(req.body.id, (err, stock) => {
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        req.user.save((err, user) => {
+            if (req.msgGenerator.generateError(err, req, res)) {
+                return;
+            }
+
+            res.end(req.msgGenerator.generateJSON('subscribeStock', 'OK'));
+            req.logger.info('Юзер ' + user.login + ' подписался на акцию ' + stock._id);
+        });
+    });
+});
+
+router.get('/feed', mw.requireClientAuth, (req, res) => {
+    req.user.getSubscribitions((err, stocks) => {
+        if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        res.end(req.msgGenerator.generateJSON('userstocks', stocks));
+    });
+});
+
 router.get('/all', mw.requireClientAuth, (req, res) => {
     Stock.allToJSON(function (stocks) {
         res.end(req.msgGenerator.generateJSON('stock', stocks));
@@ -111,7 +139,7 @@ router.get('/info', mw.requireClientAuth, (req, res) => {
     });
 });
 
-router.get('/company', mw.requireCompanyAuth, (req, res) => {
+router.get('/me', mw.requireCompanyAuth, (req, res) => {
     Stock.byCompanyID(req.company._id, (stocks) => {
         req.logger.info('Отправляю клиенту акции компании ' + req.company.login);
         res.end(req.msgGenerator.generateJSON('stock', stocks));

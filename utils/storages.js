@@ -19,5 +19,5 @@ module.exports = {
         filename: function (req, file, cb) {
             cb(null, SHA256(file.fieldname + Date.now()) + '.' + mime.extension(file.mimetype))
         }
-    }),
+    })
     };

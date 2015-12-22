@@ -1,10 +1,10 @@
 var express = require('express');
 var router  = express.Router();
 var mongoose = require('mongoose');
-var mw       = require('../utils/middlewares.js');
+var mw       = require('../../utils/middlewares.js');
 var ObjectID = require('mongodb').ObjectID;
 
-router.get('/all', (req, res) => {
+router.get('/all', mw.requireClientAuth, (req, res) => {
     var Company = mongoose.model('Company');
 
     Company.find({}, (err, companies) => {
@@ -29,7 +29,7 @@ router.get('/me', mw.requireCompanyAuth, (req, res) => {
     res.end(req.msgGenerator.generateJSON('company', req.company.toJSON()));
 });
 
-router.get('/info', mw.requireClientAuth, (req, res) => {
+router.get('/info', mw.requireAnyAuth, (req, res) => {
     var companyID = new ObjectID(req.query.id);
     var Company   = mongoose.model('Company');
 
