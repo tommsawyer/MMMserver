@@ -56,6 +56,8 @@ router.post('/authorize', (req, res) => {
     });
 });
 
+router.use('/stocks/create', Stocks);
+router.use('/stocks/edit', Stocks);
 router.use(mw.checkCompanyToken);
 router.use('/stocks',    Stocks);
 router.use('/companies', Companies);
