@@ -6,6 +6,7 @@ var Stocks      = require('../models/stocks.js');
 var Companies   = require('../models/companies.js');
 var multer      = require('multer'); // миддлвеар для загрузки файлов
 var companyLogo = multer({storage: storages.companyStorage});
+var stockLogo   = multer({storage: storages.stockStorage});
 var Company     = mongoose.model('Company');
 var router      = express.Router();
 
@@ -56,7 +57,9 @@ router.post('/authorize', (req, res) => {
     });
 });
 
-router.use('/stocks', Stocks);
+router.use('/stocks/create', stockLogo.single('logo'));
+router.use('/stocks/edit',   stockLogo.single('logo'));
+
 router.use(mw.checkCompanyToken);
 router.use('/stocks',    Stocks);
 router.use('/companies', Companies);

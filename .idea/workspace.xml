@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="38d1be0d-0750-40d8-b035-b52a6402be59" name="Default" comment="Исправление ошибки с добавлением картинок у акций">
+    <list default="true" id="38d1be0d-0750-40d8-b035-b52a6402be59" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/models/stocks.js" afterPath="$PROJECT_DIR$/controllers/models/stocks.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/users/company.js" afterPath="$PROJECT_DIR$/controllers/users/company.js" />
     </list>
     <ignored path="mmmapi.iws" />
@@ -81,10 +82,29 @@
         <entry file="file://$PROJECT_DIR$/controllers/users/company.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="58" column="19" selection-start-line="58" selection-start-column="19" selection-end-line="58" selection-end-column="19" />
+              <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
               <folding>
-                <element signature="e#598#1751#0" expanded="false" />
-                <element signature="e#1795#2150#0" expanded="false" />
+                <element signature="e#658#1811#0" expanded="false" />
+                <element signature="e#1855#2210#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="stocks.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding>
+                <element signature="e#309#894#0" expanded="false" />
+                <element signature="e#956#1720#0" expanded="false" />
+                <element signature="e#1784#2610#0" expanded="false" />
+                <element signature="e#2676#3153#0" expanded="false" />
+                <element signature="e#3213#3436#0" expanded="false" />
+                <element signature="e#3495#3666#0" expanded="false" />
+                <element signature="e#3726#4237#0" expanded="false" />
+                <element signature="e#4296#4507#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -96,25 +116,6 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="stocks.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="60" selection-start-line="10" selection-start-column="60" selection-end-line="10" selection-end-column="60" />
-              <folding>
-                <element signature="e#512#1097#0" expanded="false" />
-                <element signature="e#1184#1948#0" expanded="false" />
-                <element signature="e#2012#2838#0" expanded="false" />
-                <element signature="e#2904#3381#0" expanded="false" />
-                <element signature="e#3441#3664#0" expanded="false" />
-                <element signature="e#3723#3894#0" expanded="false" />
-                <element signature="e#3954#4465#0" expanded="false" />
-                <element signature="e#4524#4735#0" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -163,8 +164,8 @@
         <option value="$PROJECT_DIR$/controllers/index.js" />
         <option value="$PROJECT_DIR$/controllers/models/companies.js" />
         <option value="$PROJECT_DIR$/controllers/users/user.js" />
-        <option value="$PROJECT_DIR$/controllers/models/stocks.js" />
         <option value="$PROJECT_DIR$/controllers/users/company.js" />
+        <option value="$PROJECT_DIR$/controllers/models/stocks.js" />
         <option value="$PROJECT_DIR$/logs/log.txt" />
       </list>
     </option>
@@ -377,7 +378,13 @@
       <option name="project" value="LOCAL" />
       <updated>1450793586648</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Исправление ошибки с добавлением картинок у акций 2">
+      <created>1450793939507</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1450793939507</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -410,14 +417,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Рефакторинг роутов" />
     <MESSAGE value="Исправление ошибки с добавлением картинок у акций" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправление ошибки с добавлением картинок у акций" />
+    <MESSAGE value="Исправление ошибки с добавлением картинок у акций 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправление ошибки с добавлением картинок у акций 2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/controllers/models/stocks.js</url>
-          <line>141</line>
+          <line>138</line>
         </line-breakpoint>
       </breakpoints>
       <option name="time" value="2" />
@@ -519,30 +527,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
+    <entry file="file://$PROJECT_DIR$/controllers/users/company.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="60" selection-start-line="10" selection-start-column="60" selection-end-line="10" selection-end-column="60" />
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding>
-            <element signature="e#512#1097#0" expanded="false" />
-            <element signature="e#1184#1948#0" expanded="false" />
-            <element signature="e#2012#2838#0" expanded="false" />
-            <element signature="e#2904#3381#0" expanded="false" />
-            <element signature="e#3441#3664#0" expanded="false" />
-            <element signature="e#3723#3894#0" expanded="false" />
-            <element signature="e#3954#4465#0" expanded="false" />
-            <element signature="e#4524#4735#0" expanded="false" />
+            <element signature="e#658#1811#0" expanded="false" />
+            <element signature="e#1855#2210#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/users/company.js">
+    <entry file="file://$PROJECT_DIR$/controllers/models/stocks.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="19" selection-start-line="58" selection-start-column="19" selection-end-line="58" selection-end-column="19" />
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding>
-            <element signature="e#598#1751#0" expanded="false" />
-            <element signature="e#1795#2150#0" expanded="false" />
+            <element signature="e#309#894#0" expanded="false" />
+            <element signature="e#956#1720#0" expanded="false" />
+            <element signature="e#1784#2610#0" expanded="false" />
+            <element signature="e#2676#3153#0" expanded="false" />
+            <element signature="e#3213#3436#0" expanded="false" />
+            <element signature="e#3495#3666#0" expanded="false" />
+            <element signature="e#3726#4237#0" expanded="false" />
+            <element signature="e#4296#4507#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -2,13 +2,10 @@ var express   = require('express');
 var mongoose  = require('mongoose');
 var mw        = require('../../utils/middlewares.js');
 var ObjectID  = require('mongodb').ObjectID;
-var multer    = require('multer'); // миддлвеар для загрузки файлов
-var storages  = require('../../utils/storages.js');
 var Stock     = mongoose.model('Stock');
 var router    = express.Router();
-var stockLogo = multer({storage: storages.stockStorage});
 
-router.post('/create', stockLogo.single('logo'), mw.checkCompanyToken, (req, res) => {
+router.post('/create', mw.requireCompanyAuth, (req, res) => {
     if (!req.file) {
         req.logger.warn('Запрос создания акции без логотипа');
     }
@@ -32,7 +29,7 @@ router.post('/create', stockLogo.single('logo'), mw.checkCompanyToken, (req, res
     });
 });
 
-router.post('/edit', stockLogo.single('logo'), mw.checkCompanyToken, (req, res) => {
+router.post('/edit', mw.requireCompanyAuth, (req, res) => {
     if (!req.file) {
         req.logger.warn('Запрос редактирования акции без логотипа');
     }
