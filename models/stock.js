@@ -1,14 +1,18 @@
 module.exports = function (logger) {
     var mongoose = require('mongoose');
-    var fs       = require('fs');
-    var Schema   = mongoose.Schema;
+    var fs = require('fs');
     var ObjectID = require('mongodb').ObjectID;
+    var gm = require('gm').subClass({imageMagick: true});
+    var Schema = mongoose.Schema;
+
+    const THUMBNAIL_WIDTH = 480;
 
     var StockSchema = new Schema({
         name: String,
         description: String,
         company: String,
         logo: String,
+        thumb: String,
         subscribes: [String],
         startDate: Date,
         endDate: Date
@@ -20,7 +24,7 @@ module.exports = function (logger) {
         this.save();
     };
 
-    StockSchema.methods.removeSubscriber = function(userID, callback) {
+    StockSchema.methods.removeSubscriber = function (userID, callback) {
         var pos = this.subscribes.indexOf(userID);
 
         if (pos == -1) {
@@ -35,22 +39,63 @@ module.exports = function (logger) {
     StockSchema.methods.addLogo = function (file) {
         if (!file) {
             this.logo = '';
+            this.thumb = '';
             return;
         }
-        this.logo = '/stocks/' + file.filename;
+
+        var self = this;
+        self.logo = '/stocks/' + file.filename;
+        self.thumb = '/stocks/' + file.filename.split('.')[0] + '_thumb.' + file.filename.split('.')[1];
+
+        var thumbnailFilename = __dirname + '/../public/stocks/' + file.filename.split('.')[0] + '_thumb.' + file.filename.split('.')[1];
+
+        gm(__dirname + '/../public/stocks/' + file.filename)
+            .resize(THUMBNAIL_WIDTH)
+            .write(thumbnailFilename, function (err) {
+                if (err) {
+                    logger.error(err);
+                    return;
+                }
+
+                logger.info('Создал и сохранил тамбнейл для акции ' + self._id);
+            });
     };
 
     StockSchema.methods.checkOwner = function (companyID) {
         return this.company == companyID;
     };
 
-    StockSchema.methods.prepareRemove = function(callback){
-        var subscribers = this.subscribes;
-        var imgPath     = __dirname + '/../public' + this.logo;
-        var self        = this;
+    StockSchema.methods.removeImages = function (callback) {
+        var imgPath = __dirname + '/../public' + this.logo;
+        var thumbPath = __dirname + '/../public' + this.thumb;
+        var self = this;
 
         fs.unlink(imgPath, (err) => {
             var Client = mongoose.model('Client');
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            logger.info('Удалил логотип акции ' + self._id);
+
+            fs.unlink(thumbPath, (err) => {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
+                logger.info('Удалил тамбнейл акции ' + self._id);
+                callback(null);
+            });
+        });
+    };
+
+    StockSchema.methods.prepareRemove = function (callback) {
+        var subscribers = this.subscribes;
+        var self = this;
+
+        this.removeImages((err) => {
             if (err) {
                 callback(err);
                 return;
@@ -62,14 +107,16 @@ module.exports = function (logger) {
                     return;
                 }
 
-                clients.forEach((client) => {client.unsubscribe(self._id.toString())});
+                clients.forEach((client) => {
+                    client.unsubscribe(self._id.toString())
+                });
 
                 callback(null, 'ok');
             });
         });
     };
 
-    StockSchema.methods.isSubscribed = function(userID) {
+    StockSchema.methods.isSubscribed = function (userID) {
         return this.subscribes.indexOf(userID) != -1;
     };
 
@@ -91,6 +138,7 @@ module.exports = function (logger) {
                     description: self.description,
                     id: self._id,
                     logo: self.logo,
+                    thumb: self.thumb,
                     company: company.toJSON(),
                     subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
                     startDate: self.startDate,

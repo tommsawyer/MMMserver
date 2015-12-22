@@ -5,6 +5,8 @@ var ObjectID  = require('mongodb').ObjectID;
 var Stock     = mongoose.model('Stock');
 var router    = express.Router();
 
+
+
 router.post('/create', mw.requireCompanyAuth, (req, res) => {
     if (!req.file) {
         req.logger.warn('Запрос создания акции без логотипа');
@@ -34,26 +36,49 @@ router.post('/edit', mw.requireCompanyAuth, (req, res) => {
         req.logger.warn('Запрос редактирования акции без логотипа');
     }
 
-    Stock.getByID(new ObjectID(req.body.id), (err, stock) => {
+    Stock.findOne({'_id' : new ObjectID(req.body.id)}, (err, stock) => {
         if (req.msgGenerator.generateError(err, req, res)) {
             return;
         }
 
+        if (!stock) {
+            res.end(req.msgGenerator.generateJSON('error', 'Нет такой акции'));
+            req.logger.warn('Нет акции с айди ' + req.body.id);
+            return;
+        }
+
         if (!stock.checkOwner(req.company._id)) {
+            req.logger.warn('Компания с айди ' + req.company._id + ' не может редактировать акцию ' + req.body.id);
             res.end(req.msgGenerator.generateJSON('error', 'Вы не можете редактировать эту акцию'));
             return;
         }
 
-        stock.addLogo(req.file);
+        if (!req.file) {
+            stock.name = req.body.name;
+            stock.description = req.body.description;
+            stock.endDate = new Date(req.body.endDate);
 
-        stock.name = req.body.name;
-        stock.description = req.body.description;
-        stock.endDate = new Date(req.body.endDate);
+            stock.save((err) => {
+                if (req.msgGenerator.generateError(err, req, res)) {return;}
+                res.end(req.msgGenerator.generateJSON('stock', 'успешно'));
+            });
+        } else {
+            stock.removeImages((err) => {
+                if (req.msgGenerator.generateError(err, req, res)) {return;}
 
-        stock.save((err) => {
-            if (err) throw err;
-            res.end(req.msgGenerator.generateJSON('stock', 'успешно'));
-        });
+                stock.addLogo(req.file);
+
+                stock.name = req.body.name;
+                stock.description = req.body.description;
+                stock.startDate = new Date(req.body.startDate);
+                stock.endDate = new Date(req.body.endDate);
+
+                stock.save((err) => {
+                    if (req.msgGenerator.generateError(err, req, res)) {return;}
+                    res.end(req.msgGenerator.generateJSON('stock', 'успешно'));
+                });
+            });
+        }
     });
 });
 
@@ -132,6 +157,8 @@ router.get('/all', mw.requireClientAuth, (req, res) => {
     });
 });
 
+
+//TODO этот метод не работает. переделать!
 router.get('/info', mw.requireClientAuth, (req, res) => {
     if (!req.query.id) {
         req.logger.warn('В запросе нет айди для поиска акции');
