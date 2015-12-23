@@ -146,12 +146,7 @@ router.get('/feed', mw.requireClientAuth, (req, res) => {
             return;
         }
 
-        var promises = [];
-        stocks.forEach((stock) => {promises.push(stock.toJSON(req.client._id.toString()))});
-
-        Promise.all(promises).then(function(results){
-            res.end(req.msgGenerator.generateJSON('userstocks', results));
-        });
+        res.end(req.msgGenerator.generateJSON('userstocks', stocks));
     });
 });
 

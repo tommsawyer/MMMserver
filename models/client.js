@@ -18,6 +18,7 @@ module.exports = function (logger) {
     ClientSchema.methods.getSubscribitions = function (callback) {
         var Stock = mongoose.model('Stock');
         var subscribitions = this.stocks.map((id) => {return new ObjectID(id)});
+        var self = this;
 
 
         if (subscribitions.length == 0) {
@@ -34,7 +35,7 @@ module.exports = function (logger) {
             var promises = [];
 
             stocks.forEach((stock) => {
-                promises.push(stock.toJSON())
+                promises.push(stock.toJSON(self._id));
             });
 
             Promise.all(promises).then(function (stocks) {
