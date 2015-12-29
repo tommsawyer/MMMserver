@@ -21,10 +21,8 @@ router.get('/', mw.requireClientAuth, (req, res) => {
 });
 
 router.get('/company', mw.requireClientAuth, (req, res) => {
-    Stock.byCompanyID(req.query.companyID, req.client._id.toString(), (err, stocks) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
-
-        req.logger.info('Поиск по запросу ' + searchWord + ' нашел ' + stocks.length + ' акций');
+    Stock.byCompanyID(req.query.companyID, req.client._id.toString(), (stocks) => {
+        req.logger.info('У компании ' + req.query.companyID + ' ' + stocks.length + ' акций. Отправляю клиенту');
         res.end(req.msgGenerator.generateJSON('stocks', stocks));
     });
 });
