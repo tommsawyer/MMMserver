@@ -2,10 +2,11 @@ var express   = require('express');
 var mongoose  = require('mongoose');
 var mw        = require('../../utils/middlewares.js');
 var ObjectID  = require('mongodb').ObjectID;
+var filter    = require('../mechanics/filter.js');
 var Stock     = mongoose.model('Stock');
 var router    = express.Router();
 
-
+router.use('/filter', filter);
 
 router.post('/create', mw.requireCompanyAuth, (req, res) => {
     if (!req.file) {
@@ -157,7 +158,6 @@ router.get('/all', mw.requireClientAuth, (req, res) => {
     });
 });
 
-
 //TODO этот метод не работает. переделать!
 router.get('/info', mw.requireClientAuth, (req, res) => {
     if (!req.query.id) {
@@ -177,7 +177,7 @@ router.get('/info', mw.requireClientAuth, (req, res) => {
 });
 
 router.get('/me', mw.requireCompanyAuth, (req, res) => {
-    Stock.byCompanyID(req.company._id, (stocks) => {
+    Stock.byCompanyID(req.company._id, undefined,  (stocks) => {
         req.logger.info('Отправляю клиенту акции компании ' + req.company.login);
         res.end(req.msgGenerator.generateJSON('stock', stocks));
     });

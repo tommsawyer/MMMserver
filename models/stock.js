@@ -131,21 +131,55 @@ module.exports = function (logger) {
                     logger.error(err);
                     throw err;
                 }
+
                 if (!company) {
                     logger.warn('У акции с айди ' + self.id + ' не указана компания или некорректный айди(id = ' + self.company + ')');
                     company = '';
+                } else {
+                    company = company.toJSON();
                 }
+
                 resolve({
                     name: self.name,
                     description: self.description,
                     id: self._id,
                     logo: self.logo,
                     thumb: self.thumb,
-                    company: company.toJSON(),
+                    company: company,
                     subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
                     startDate: self.startDate,
                     endDate: self.endDate
                 });
+            });
+        });
+    };
+
+    StockSchema.statics.bySearchWord = function (word, userID, callback) {
+        var searchRegExp = new RegExp('.*' + word + '.*', 'i');
+
+        this.find({
+            $or: [
+                {'name': {$regex: searchRegExp}},
+                {'description': {$regex: searchRegExp}}
+            ]
+        }, (err, stocks) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            if (stocks.length == 0) {
+                callback(null, []);
+                return;
+            }
+
+            var promises = [];
+            stocks.forEach((stock) => {
+                promises.push(stock.toJSON(userID))
+            });
+
+            Promise.all(promises).then(function (stocks) {
+                callback(null, stocks);
             });
         });
     };
@@ -168,7 +202,19 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.byCompanyID = function (companyID, callback) {
+    StockSchema.statics.arrayToJSON = function(userID, stocks, callback) {
+        var promises = [];
+
+        stocks.forEach((stock) => {
+            promises.push(stock.toJSON(userID))
+        });
+
+        Promise.all(promises).then(function (stocks) {
+            callback(stocks);
+        });
+    };
+
+    StockSchema.statics.byCompanyID = function (companyID, userID, callback) {
         this.find({'company': companyID}, (err, stocks) => {
             if (err) {
                 logger.error(err);
@@ -183,7 +229,7 @@ module.exports = function (logger) {
 
             var promises = [];
             stocks.forEach((stock) => {
-                promises.push(stock.toJSON())
+                promises.push(stock.toJSON(userID))
             });
             Promise.all(promises).then((stocks) => {
                 callback(stocks);
@@ -191,25 +237,49 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.byFilter = function (companyID, category, callback) {
-        this.find({'company': companyID, 'category': category}, (err, stocks) => {
-            if (err) {
-                logger.error(err);
-                throw err;
-            }
+    StockSchema.statics.constructQuery = function (query) {
+        var resultQuery = {
+            $and: []
+        };
 
-            if (!stocks) {
-                logger.info('Не найдено акций у компании ' + companyID + ' и категории ' + category);
-                callback([]);
+        if (query.companyID) {
+            resultQuery.$and.push({
+                'company': query.companyID
+            });
+        }
+
+        if (query.searchword) {
+            var searchRegExp = new RegExp('.*' + query.searchword + '.*', 'i');
+
+            resultQuery.$and.push({$or:[
+                {'name': {$regex: searchRegExp}},
+                {'description': {$regex: searchRegExp}}
+            ]});
+        }
+
+        if (query.category) {
+            resultQuery.$and.push({
+                'category': query.category
+            });
+        }
+
+        return resultQuery;
+    };
+
+    StockSchema.statics.byQuery = function (query, userID, callback) {
+        this.find(this.constructQuery(query), (err, stocks) => {
+            if (err) {
+                callback(err);
                 return;
             }
 
-            var promises = [];
-            stocks.forEach((stock) => {
-                promises.push(stock.toJSON())
-            });
-            Promise.all(promises).then((stocks) => {
-                callback(stocks);
+            if (stocks.length == 0) {
+                callback(null, []);
+                return;
+            }
+
+            this.arrayToJSON(userID, stocks, (result) => {
+               callback(null, result);
             });
         });
     };

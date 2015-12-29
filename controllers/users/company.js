@@ -1,15 +1,15 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var storages = require('../../utils/storages.js');
-var mw = require('../../utils/middlewares.js');
-var Stocks = require('../models/stocks.js');
-var Companies = require('../models/companies.js');
-var mail = require('../../utils/mail.js');
-var multer = require('multer'); // миддлвеар для загрузки файлов
+var express     = require('express');
+var mongoose    = require('mongoose');
+var storages    = require('../../utils/storages.js');
+var mw          = require('../../utils/middlewares.js');
+var Stocks      = require('../models/stocks.js');
+var Companies   = require('../models/companies.js');
+var mail        = require('../../utils/mail.js');
+var multer      = require('multer'); // миддлвеар для загрузки файлов
 var companyLogo = multer({storage: storages.companyStorage});
-var stockLogo = multer({storage: storages.stockStorage});
-var Company = mongoose.model('Company');
-var router = express.Router();
+var stockLogo   = multer({storage: storages.stockStorage});
+var Company     = mongoose.model('Company');
+var router      = express.Router();
 
 router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (req, res) => {
     if (!req.file) {

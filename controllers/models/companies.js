@@ -1,17 +1,14 @@
-var express = require('express');
-var router  = express.Router();
+var express  = require('express');
 var mongoose = require('mongoose');
 var mw       = require('../../utils/middlewares.js');
 var ObjectID = require('mongodb').ObjectID;
+var router   = express.Router();
 
 router.get('/all', mw.requireClientAuth, (req, res) => {
     var Company = mongoose.model('Company');
 
     Company.find({}, (err, companies) => {
-        if (err) {
-            req.logger.error(err);
-            throw (err);
-        }
+        if (req.msgGenerator.generateError(err, req, res)) {return;}
 
         if (!companies){
             req.logger.warn('На сервере нет ни одной компании!');
