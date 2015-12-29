@@ -49,6 +49,7 @@ module.exports = function (logger) {
         this.active = false;
         this.activationHash = hash;
         logger.info('Установил компании ' + this._id + ' хэш для активации (' + hash + ')');
+        this.save();
     };
 
     CompanySchema.methods.activate = function() {

@@ -45,8 +45,7 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
             mail.sendActivationEmail(company.email, activationHash);
 
             req.logger.info('Создал новую компанию ' + company.login);
-            res.end(req.msgGenerator.generateJSON('register', company.getToken()));
-            req.logger.info('Отправил клиенту токен новой компании');
+            res.end(req.msgGenerator.generateJSON('register', 'успешно'));
         });
     });
 
@@ -55,6 +54,12 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
 router.post('/authorize', (req, res) => {
     Company.authorize(req.body.login, req.body.password, (err, company) => {
         if (req.msgGenerator.generateError(err, req, res)) {
+            return;
+        }
+
+        if (!company.active) {
+            req.logger.info('Компания не активирована ' + req.body.login);
+            res.end(req.msgGenerator.generateJSON('error', 'Е-мейл не активирован'));
             return;
         }
 
