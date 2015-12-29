@@ -40,6 +40,12 @@ module.exports = {
                 return;
             }
 
+            if (!company.active){
+                res.logger.warn('Запрос от неактивированной компании');
+                res.end(req.msgGenerator.generateJSON('error', 'Компания не подтвердила е-мейл'));
+                return;
+            }
+
             req.company = company;
             next();
         });

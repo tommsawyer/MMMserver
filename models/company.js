@@ -2,6 +2,7 @@ module.exports = function (logger) {
     var mongoose = require('mongoose');
     var Schema   = mongoose.Schema;
     var User     = mongoose.model('User');
+    var SHA256 = require('crypto-js/sha256');
 
     var CompanySchema = new Schema({
         name: String,
@@ -9,9 +10,12 @@ module.exports = function (logger) {
         OGRN: String,
         parentCompany: String,
         region: String,
+        email: String,
         address: String,
         logo: String,
-        type: String
+        type: String,
+        active: Boolean,
+        activationHash: String
     });
 
     CompanySchema.methods.toJSON = function () {
@@ -34,6 +38,41 @@ module.exports = function (logger) {
             return;
         }
         this.logo = '/companies/' + filename;
+    };
+
+    CompanySchema.methods.generateActivationHash = function() {
+        logger.info('Генерирую хэш для активации..');
+        return SHA256(this.name + this.login + new Date().toDateString()).toString();
+    };
+
+    CompanySchema.methods.setActivationHash = function(hash) {
+        this.active = false;
+        this.activationHash = hash;
+        logger.info('Установил компании ' + this._id + ' хэш для активации (' + hash + ')');
+    };
+
+    CompanySchema.methods.activate = function() {
+        this.activationHash = null;
+        this.active = true;
+        logger.info('Компания с id ' + this._id + ' активировала е-майл')
+        this.save();
+    };
+
+    CompanySchema.statics.tryActivateByHash = function(hash, callback) {
+        this.findOne({'activationHash': hash}, (err, company) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            if (!company){
+                callback(new Error('Нет такой компании или уже активирована'));
+                return;
+            }
+
+            company.activate();
+            callback(null, company);
+        });
     };
 
     User.discriminator('Company', CompanySchema);
