@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38d1be0d-0750-40d8-b035-b52a6402be59" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/controllers/mechanics/filter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/controllers/mechanics/friends.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/controllers/mechanics/stats.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/mail.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/controllers/models/stats.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/models/companies.js" afterPath="$PROJECT_DIR$/controllers/models/companies.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/models/stocks.js" afterPath="$PROJECT_DIR$/controllers/models/stocks.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/users/company.js" afterPath="$PROJECT_DIR$/controllers/users/company.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/stock.js" afterPath="$PROJECT_DIR$/models/stock.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
     </list>
     <ignored path="mmmapi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -88,10 +80,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mail.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mail.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils/mail.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8592965">
+            <state vertical-scroll-proportion="0.0">
               <caret line="19" column="88" selection-start-line="19" selection-start-column="88" selection-end-line="19" selection-end-column="88" />
               <folding />
             </state>
@@ -103,16 +95,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="categories.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/models/categories.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -146,7 +128,17 @@
         <entry file="file://$PROJECT_DIR$/configs/mail.json">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-2.6666667">
-              <caret line="4" column="60" selection-start-line="4" selection-start-column="60" selection-end-line="4" selection-end-column="60" />
+              <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.2237197">
+              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -182,7 +174,6 @@
         <option value="$PROJECT_DIR$/utils/middlewares.js" />
         <option value="$PROJECT_DIR$/utils/mail.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/configs/mail.json" />
         <option value="$PROJECT_DIR$/models/company.js" />
         <option value="$PROJECT_DIR$/controllers/users/company.js" />
         <option value="$PROJECT_DIR$/controllers/mechanics/stats.js" />
@@ -192,6 +183,8 @@
         <option value="$PROJECT_DIR$/models/stock.js" />
         <option value="$PROJECT_DIR$/controllers/mechanics/filter.js" />
         <option value="$PROJECT_DIR$/logs/log.txt" />
+        <option value="$PROJECT_DIR$/configs/mail.json" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -307,6 +300,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="mechanics" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mmmapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mmmapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="configs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -472,7 +479,13 @@
       <option name="project" value="LOCAL" />
       <updated>1451402335775</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Рефакторинг. Фильтрация акций">
+      <created>1451409904462</created>
+      <option name="number" value="00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1451409904462</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TodoView">
@@ -533,7 +546,8 @@
     <MESSAGE value="В ленте присылается флаг подписки 2" />
     <MESSAGE value="При регистрации компаний отправлется письмо на почту" />
     <MESSAGE value="При регистрации и авторизации компаний токен не присылается если компания не подтвердила е-мейл" />
-    <option name="LAST_COMMIT_MESSAGE" value="При регистрации и авторизации компаний токен не присылается если компания не подтвердила е-мейл" />
+    <MESSAGE value="Рефакторинг. Фильтрация акций" />
+    <option name="LAST_COMMIT_MESSAGE" value="Рефакторинг. Фильтрация акций" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1127,14 +1141,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/configs/mail.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6666667">
-          <caret line="4" column="60" selection-start-line="4" selection-start-column="60" selection-end-line="4" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/logs/log.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1145,8 +1151,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/mail.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8592965">
+        <state vertical-scroll-proportion="0.0">
           <caret line="19" column="88" selection-start-line="19" selection-start-column="88" selection-end-line="19" selection-end-column="88" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/configs/mail.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6666667">
+          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.2237197">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding />
         </state>
       </provider>
