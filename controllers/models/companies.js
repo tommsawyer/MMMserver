@@ -34,7 +34,7 @@ router.get('/info', mw.requireAnyAuth, (req, res, next) => {
     try {
         companyID = new ObjectID(req.query.id);
     } catch (e) {
-        return next(new JSONError('Некорректный айди компании - ' + req.query.id, 'error'));
+        return next(new JSONError('error', 'Некорректный айди компании - ' + req.query.id));
     }
 
     Company.findOne({_id: companyID}, (err, company) => {
@@ -43,7 +43,7 @@ router.get('/info', mw.requireAnyAuth, (req, res, next) => {
         }
 
         if (!company) {
-            return next(new JSONError('Нет такой компании', 'error'));
+            return next(new JSONError('error', 'Нет такой компании'));
         }
 
         req.JSONAnswer('company', company.toJSON());

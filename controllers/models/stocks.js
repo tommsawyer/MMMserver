@@ -41,12 +41,12 @@ router.post('/edit', mw.requireCompanyAuth, (req, res) => {
 
         if (!stock) {
             req.logger.warn('Нет акции с айди ' + req.body.id);
-            return next(new JSONError('Нет такой акции', 'error'));
+            return next(new JSONError('error', 'Нет такой акции'));
         }
 
         if (!stock.checkOwner(req.company._id)) {
             req.logger.warn('Компания с айди ' + req.company._id + ' не может редактировать акцию ' + req.body.id);
-            return next(new JSONError('Вы не можете редактировать эту акцию', 'error'));
+            return next(new JSONError('error', 'Вы не можете редактировать эту акцию'));
         }
 
         if (!req.file) {
@@ -93,11 +93,11 @@ router.post('/remove', mw.requireCompanyAuth, (req, res) => {
             return next(err);
         }
         if (!stock) {
-            return next(new JSONError('Нет такой акции', 'error'));
+            return next(new JSONError('error', 'Нет такой акции'));
         }
 
         if (!stock.checkOwner(req.company._id.toString())) {
-            return next(new JSONError('Эта компания не имеет прав для удаления этой акции', 'error'));
+            return next(new JSONError('error', 'Эта компания не имеет прав для удаления этой акции'));
         }
 
         stock.prepareRemove((err) => {
