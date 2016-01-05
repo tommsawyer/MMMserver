@@ -1,9 +1,10 @@
 module.exports = function (logger) {
-    var mongoose = require('mongoose');
-    var fs = require('fs');
-    var ObjectID = require('mongodb').ObjectID;
-    var gm = require('gm').subClass({imageMagick: true});
-    var Schema = mongoose.Schema;
+    var mongoose  = require('mongoose');
+    var fs        = require('fs');
+    var ObjectID  = require('mongodb').ObjectID;
+    var gm        = require('gm').subClass({imageMagick: true});
+    var JSONError = require('../lib/json_error');
+    var Schema    = mongoose.Schema;
 
     const THUMBNAIL_WIDTH = 480;
 
@@ -192,7 +193,7 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.arrayToJSON = function(userID, stocks, callback) {
+    StockSchema.statics.arrayToJSON = function (userID, stocks, callback) {
         var promises = [];
 
         stocks.forEach((stock) => {
@@ -207,18 +208,17 @@ module.exports = function (logger) {
     StockSchema.statics.byCompanyID = function (companyID, userID, callback) {
         this.find({'company': companyID}, (err, stocks) => {
             if (err) {
-                logger.error(err);
-                throw err;
+                callback(err);
             }
 
             if (stocks.length == 0) {
                 logger.info('У компании ' + companyID + ' нет акций');
-                callback([]);
+                callback(null, []);
                 return;
             }
 
             this.arrayToJSON(userID, stocks, (stocksJSON) => {
-                callback(stocks);
+                callback(null, stocksJSON);
             });
         });
     };
@@ -237,10 +237,12 @@ module.exports = function (logger) {
         if (query.searchword) {
             var searchRegExp = new RegExp('.*' + query.searchword + '.*', 'i');
 
-            resultQuery.$and.push({$or:[
-                {'name': {$regex: searchRegExp}},
-                {'description': {$regex: searchRegExp}}
-            ]});
+            resultQuery.$and.push({
+                $or: [
+                    {'name': {$regex: searchRegExp}},
+                    {'description': {$regex: searchRegExp}}
+                ]
+            });
         }
 
         if (query.category) {
@@ -265,7 +267,7 @@ module.exports = function (logger) {
             }
 
             this.arrayToJSON(userID, stocks, (result) => {
-               callback(null, result);
+                callback(null, result);
             });
         });
     };

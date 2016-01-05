@@ -9,7 +9,7 @@ router.get('/logs', (req, res) => {
 router.get('/clearlogs', (req, res) => {
     req.logger.clearLog();
     req.logger.info('Очищен лог-файл');
-    res.end(req.msgGenerator.generateJSON('Clear logs', 'success'));
+    res.JSONAnswer('Clear logs', 'success');
 });
 
 module.exports = router;

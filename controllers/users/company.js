@@ -4,6 +4,7 @@ var storages    = require('../../utils/storages.js');
 var mw          = require('../../utils/middlewares.js');
 var Stocks      = require('../models/stocks.js');
 var Companies   = require('../models/companies.js');
+var JSONError   = require('../../lib/json_error');
 var mail        = require('../../utils/mail.js');
 var multer      = require('multer'); // миддлвеар для загрузки файлов
 var companyLogo = multer({storage: storages.companyStorage});
@@ -14,15 +15,13 @@ var router      = express.Router();
 router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (req, res) => {
     if (!req.file) {
         req.logger.info('Нет логотипа при регистрации компании');
-        res.end(req.msgGenerator.generateJSON('register', 'Необходим логотип при регистрации компании'));
-        return;
+        return next(new JSONError('register', 'Необходим логотип при регистрации компании'));
     }
 
     Company.byLogin(req.body.login, (err, company) => {
         if (company) {
             req.logger.info('Компания с логином ' + req.body.login + ' уже существует');
-            res.end(req.msgGenerator.generateJSON('error', 'Компания с таким логином уже существует'));
-            return;
+            return next(new JSONError('error', 'Компания с таким логином уже существует'));
         }
 
         Company.create({
@@ -35,8 +34,8 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
             active: false,
             logo: '/companies/' + req.file.filename
         }, (err, company) => {
-            if (req.msgGenerator.generateError(err, req, res)) {
-                return;
+            if (err) {
+                return next(err);
             }
 
             var activationHash = company.generateActivationHash();
@@ -45,7 +44,7 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
             mail.sendActivationEmail(company.email, activationHash);
 
             req.logger.info('Создал новую компанию ' + company.login);
-            res.end(req.msgGenerator.generateJSON('register', 'успешно'));
+            res.JSONAnswer('register', 'успешно');
         });
     });
 
@@ -53,20 +52,20 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
 
 router.post('/authorize', (req, res) => {
     Company.authorize(req.body.login, req.body.password, (err, company) => {
-        if (req.msgGenerator.generateError(err, req, res)) {
-            return;
+        if (err) {
+            return next(err);
         }
+
 
         if (!company.active) {
             req.logger.info('Компания не активирована ' + req.body.login);
-            res.end(req.msgGenerator.generateJSON('error', 'Е-мейл не активирован'));
-            return;
+            return next(new JSONError('error', 'Е-мейл не активирован'));
         }
 
         var token = company.getToken();
 
         req.logger.info('Авторизовалась компания ' + req.body.login);
-        res.end(req.msgGenerator.generateJSON('token', token));
+        res.JSONAnswer('token', token);
     });
 });
 
@@ -74,8 +73,8 @@ router.get('/activate', (req, res) => {
     var activationHash = req.query.hash;
 
     Company.tryActivateByHash(activationHash, (err, company) => {
-        if (req.msgGenerator.generateError(err, req, res)) {
-            return;
+        if (err) {
+            return next(err);
         }
 
         res.end('Компания успешно активирована!');

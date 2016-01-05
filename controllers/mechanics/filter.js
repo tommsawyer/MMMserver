@@ -11,30 +11,38 @@ router.get('/', mw.requireClientAuth, (req, res) => {
         category  : req.category
     };
 
-    Stock.byQuery(query, req.client._id.toString(), (err, stocks) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
+    Stock.byQuery(query, req.user._id.toString(), (err, stocks) => {
+        if (err) {
+            throw err;
+        }
 
         req.logger.info('Отправляю клиенту найденные акции');
-        res.end(req.msgGenerator.generateJSON('stocks', stocks));
+        res.JSONAnswer('stocks', stocks);
     });
 
 });
 
 router.get('/company', mw.requireClientAuth, (req, res) => {
-    Stock.byCompanyID(req.query.companyID, req.client._id.toString(), (stocks) => {
+    Stock.byCompanyID(req.query.companyID, req.user._id.toString(), (err, stocks) => {
+        if (err) {
+            throw err;
+        }
+
         req.logger.info('У компании ' + req.query.companyID + ' ' + stocks.length + ' акций. Отправляю клиенту');
-        res.end(req.msgGenerator.generateJSON('stocks', stocks));
+        res.JSONAnswer('stocks', stocks);
     });
 });
 
 router.get('/search', mw.requireClientAuth, (req, res) => {
     var searchWord = req.query.searchword;
 
-    Stock.bySearchWord(searchWord, req.client._id.toString(), (err, stocks) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
+    Stock.bySearchWord(searchWord, req.user._id.toString(), (err, stocks) => {
+        if (err) {
+            throw err;
+        }
 
         req.logger.info('Поиск по запросу ' + searchWord + ' нашел ' + stocks.length + ' акций');
-        res.end(req.msgGenerator.generateJSON('stocks', stocks));
+        res.JSONAnswer('stocks', stocks);
     });
 });
 

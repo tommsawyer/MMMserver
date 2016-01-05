@@ -1,14 +1,16 @@
-var express  = require('express');
-var mongoose = require('mongoose');
-var mw       = require('../../utils/middlewares.js');
-var ObjectID = require('mongodb').ObjectID;
-var router   = express.Router();
+var express   = require('express');
+var mongoose  = require('mongoose');
+var mw        = require('../../utils/middlewares.js');
+var ObjectID  = require('mongodb').ObjectID;
+var JSONError = require('../../lib/json_error');
+var Company   = mongoose.model('Company');
+var router    = express.Router();
 
 router.get('/all', mw.requireClientAuth, (req, res) => {
-    var Company = mongoose.model('Company');
-
     Company.find({}, (err, companies) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
+        if (err) {
+            throw err;
+        }
 
         if (!companies){
             req.logger.warn('На сервере нет ни одной компании!');
@@ -17,28 +19,34 @@ router.get('/all', mw.requireClientAuth, (req, res) => {
         var comp = companies.map((company) => {return company.toJSON()});
 
         req.logger.info('Отправляю все компании пользователю. Всего ' + comp.length);
-        res.end(req.msgGenerator.generateJSON('companies', comp));
+        res.JSONAnswer('companies', comp);
     });
 });
 
 router.get('/me', mw.requireCompanyAuth, (req, res) => {
     req.logger.info('Присылаю информацию о компании ' + req.company._id);
-    res.end(req.msgGenerator.generateJSON('company', req.company.toJSON()));
+    res.JSONAnswer('company', req.company.toJSON());
 });
 
-router.get('/info', mw.requireAnyAuth, (req, res) => {
-    var companyID = new ObjectID(req.query.id);
-    var Company   = mongoose.model('Company');
+router.get('/info', mw.requireAnyAuth, (req, res, next) => {
+    var companyID;
+
+    try {
+        companyID = new ObjectID(req.query.id);
+    } catch (e) {
+        return next(new JSONError('Некорректный айди компании - ' + req.query.id, 'error'));
+    }
 
     Company.findOne({_id: companyID}, (err, company) => {
-        if (req.msgGenerator.generateError(err, req, res)) {return;}
-
-        if (!company) {
-            res.end(req.msgGenerator.generateJSON('error','Нет такой компании'));
-            return;
+        if (err) {
+            throw err;
         }
 
-        res.end(req.msgGenerator.generateJSON('company', company.toJSON()));
+        if (!company) {
+            return next(new JSONError('Нет такой компании', 'error'));
+        }
+
+        req.JSONAnswer('company', company.toJSON());
     });
 
 });
