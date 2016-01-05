@@ -173,13 +173,8 @@ module.exports = function (logger) {
                 return;
             }
 
-            var promises = [];
-            stocks.forEach((stock) => {
-                promises.push(stock.toJSON(userID))
-            });
-
-            Promise.all(promises).then(function (stocks) {
-                callback(null, stocks);
+            this.arrayToJSON(userID, stocks, (stocksJSON) => {
+                callback(null, stocksJSON);
             });
         });
     };
@@ -191,13 +186,8 @@ module.exports = function (logger) {
                 throw err;
             }
 
-            var promises = [];
-            stocks.forEach((stock) => {
-                promises.push(stock.toJSON(userID))
-            });
-
-            Promise.all(promises).then(function (stocks) {
-                callback(stocks);
+            this.arrayToJSON(userID, stocks, (stocksJSON) => {
+                callback(stocksJSON);
             });
         });
     };
@@ -227,11 +217,7 @@ module.exports = function (logger) {
                 return;
             }
 
-            var promises = [];
-            stocks.forEach((stock) => {
-                promises.push(stock.toJSON(userID))
-            });
-            Promise.all(promises).then((stocks) => {
+            this.arrayToJSON(userID, stocks, (stocksJSON) => {
                 callback(stocks);
             });
         });

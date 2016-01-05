@@ -5,5 +5,5 @@
 /public/users/?*.*
 /public/companies/?*.*
 /logs
-/logs/log.txt
-/.idea
+**/.idea/workspace.xml
+**/.idea/tasks.xml

@@ -17,7 +17,9 @@ module.exports = function (logger) {
 
     ClientSchema.methods.getSubscribitions = function (callback) {
         var Stock = mongoose.model('Stock');
-        var subscribitions = this.stocks.map((id) => {return new ObjectID(id)});
+        var subscribitions = this.stocks.map((id) => {
+            return new ObjectID(id)
+        });
         var self = this;
 
 
@@ -32,17 +34,9 @@ module.exports = function (logger) {
                 return;
             }
 
-            var promises = [];
-
-            stocks.forEach((stock) => {
-                promises.push(stock.toJSON(self._id));
-            });
-
-            Promise.all(promises).then(function (stocks) {
+            Stock.arrayToJSON(self._id, stocks, (stocksJSON) => {
                 callback(null, stocks);
             });
-
-
         });
     };
 
@@ -78,7 +72,7 @@ module.exports = function (logger) {
         });
     };
 
-    ClientSchema.methods.unsubscribe = function(id) {
+    ClientSchema.methods.unsubscribe = function (id) {
         var stockPosition = this.stocks.indexOf(id);
 
         if (stockPosition == -1) {
