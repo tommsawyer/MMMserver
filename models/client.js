@@ -1,8 +1,9 @@
 module.exports = function (logger) {
-    var mongoose = require('mongoose');
-    var Schema = mongoose.Schema;
-    var ObjectID = require('mongodb').ObjectID;
-    var User = mongoose.model('User');
+    var mongoose  = require('mongoose');
+    var Schema    = mongoose.Schema;
+    var ObjectID  = require('mongodb').ObjectID;
+    var JSONError = require('../lib/json_error');
+    var User      = mongoose.model('User');
 
     var ClientSchema = new Schema({
         address: String,
@@ -50,7 +51,7 @@ module.exports = function (logger) {
 
             if (!stock) {
                 logger.warn('Не существует акции с айди ' + id);
-                callback(new Error('Нет такой акции'));
+                callback(new JSONError('error', 'Нет такой акции'));
                 return;
             }
 
@@ -61,7 +62,7 @@ module.exports = function (logger) {
 
             if (subscribes.indexOf(id) != -1) {
                 logger.warn('Попытка подписаться на акцию, которая уже в подписках. Айди ' + id);
-                callback(new Error('Вы уже подписаны на эту акцию'));
+                callback(new JSONError('error', 'Вы уже подписаны на эту акцию'));
                 return;
             }
 
