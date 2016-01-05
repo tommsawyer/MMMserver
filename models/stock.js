@@ -14,28 +14,46 @@ module.exports = function (logger) {
         company: String,
         logo: String,
         thumb: String,
-        subscribes: [String],
+        subscribes: [{
+            id: String,
+            date: Date
+        }],
         startDate: Date,
         endDate: Date
     });
 
+    /* Подписки */
+
     StockSchema.methods.addSubscriber = function (id) {
         logger.info('Добавляю подписчика к акции ' + this._id);
-        this.subscribes.push(id);
+        this.subscribes.push({
+            'id'  : id,
+            'date': new Date()
+        });
         this.save();
     };
 
     StockSchema.methods.removeSubscriber = function (userID, callback) {
-        var pos = this.subscribes.indexOf(userID);
+        var pos = this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID);
 
         if (pos == -1) {
-            callback(new Error('Юзер не подписан на эту акцию'));
+            callback(new JSONError('error', 'Юзер не подписан на эту акцию'));
             return;
         }
 
         this.subscribes.splice(pos, 1);
         callback(null);
     };
+
+    StockSchema.methods.isSubscribed = function (userID) {
+        return this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID) != -1;
+    };
+
+    StockSchema.methods.getSubscribitionsDates = function() {
+        return this.subscribes.map((subscr) => {return subscr.date});
+    };
+
+    /* Изображения */
 
     StockSchema.methods.addLogo = function (file) {
         if (!file) {
@@ -60,10 +78,6 @@ module.exports = function (logger) {
 
                 logger.info('Создал и сохранил тамбнейл для акции ' + self._id);
             });
-    };
-
-    StockSchema.methods.checkOwner = function (companyID) {
-        return this.company == companyID;
     };
 
     StockSchema.methods.removeImages = function (callback) {
@@ -92,72 +106,10 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.methods.prepareRemove = function (callback) {
-        var subscribers = this.subscribes;
-        var self = this;
-
-        this.removeImages((err) => {
-            if (err) {
-                callback(err);
-                return;
-            }
-
-            var Client = mongoose.model('Client');
-
-            Client.find({_id: {$in: subscribers}}, (err, clients) => {
-                if (err) {
-                    callback(err);
-                    return;
-                }
-
-                clients.forEach((client) => {
-                    client.unsubscribe(self._id.toString())
-                });
-
-                callback(null, 'ok');
-            });
-        });
-    };
-
-    StockSchema.methods.isSubscribed = function (userID) {
-        return this.subscribes.indexOf(userID) != -1;
-    };
-
-    StockSchema.methods.toJSON = function (userID) {
-        var self = this;
-        return new Promise(function (resolve) {
-            var Company = mongoose.model('Company');
-            Company.findOne({'_id': new ObjectID(self.company)}, (err, company) => {
-                if (err) {
-                    logger.error(err);
-                    throw err;
-                }
-
-                if (!company) {
-                    logger.warn('У акции с айди ' + self.id + ' не указана компания или некорректный айди(id = ' + self.company + ')');
-                    company = '';
-                } else {
-                    company = company.toJSON();
-                }
-
-                resolve({
-                    name: self.name,
-                    description: self.description,
-                    id: self._id,
-                    logo: self.logo,
-                    thumb: self.thumb,
-                    company: company,
-                    subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
-                    startDate: self.startDate,
-                    endDate: self.endDate
-                });
-            });
-        });
-    };
+    /* Выборка */
 
     StockSchema.statics.bySearchWord = function (word, userID, callback) {
         var searchRegExp = new RegExp('.*' + word + '.*', 'i');
-
         this.find({
             $or: [
                 {'name': {$regex: searchRegExp}},
@@ -178,31 +130,7 @@ module.exports = function (logger) {
                 callback(null, stocksJSON);
             });
         });
-    };
 
-    StockSchema.statics.allToJSON = function (userID, callback) {
-        this.find({}, (err, stocks) => {
-            if (err) {
-                logger.error(err);
-                throw err;
-            }
-
-            this.arrayToJSON(userID, stocks, (stocksJSON) => {
-                callback(stocksJSON);
-            });
-        });
-    };
-
-    StockSchema.statics.arrayToJSON = function (userID, stocks, callback) {
-        var promises = [];
-
-        stocks.forEach((stock) => {
-            promises.push(stock.toJSON(userID))
-        });
-
-        Promise.all(promises).then(function (stocks) {
-            callback(stocks);
-        });
     };
 
     StockSchema.statics.byCompanyID = function (companyID, userID, callback) {
@@ -272,20 +200,94 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.getByID = function (id, callback) {
-        this.findOne({'_id': id}, (err, stock) => {
+    /*  Преобразование в JSON  */
+
+    StockSchema.methods.toJSON = function (userID) {
+        var self = this;
+        return new Promise(function (resolve) {
+            var Company = mongoose.model('Company');
+            Company.findOne({'_id': new ObjectID(self.company)}, (err, company) => {
+                if (err) {
+                    logger.error(err);
+                    throw err;
+                }
+
+                if (!company) {
+                    logger.warn('У акции с айди ' + self.id + ' не указана компания или некорректный айди(id = ' + self.company + ')');
+                    company = '';
+                } else {
+                    company = company.toJSON();
+                }
+
+                resolve({
+                    name: self.name,
+                    description: self.description,
+                    id: self._id,
+                    logo: self.logo,
+                    thumb: self.thumb,
+                    company: company,
+                    subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
+                    startDate: self.startDate,
+                    endDate: self.endDate
+                });
+            });
+        });
+    };
+
+    StockSchema.statics.allToJSON = function (userID, callback) {
+        this.find({}, (err, stocks) => {
+            if (err) {
+                logger.error(err);
+                throw err;
+            }
+
+            this.arrayToJSON(userID, stocks, (stocksJSON) => {
+                callback(stocksJSON);
+            });
+        });
+    };
+
+    StockSchema.statics.arrayToJSON = function (userID, stocks, callback) {
+        var promises = [];
+        stocks.forEach((stock) => {
+            promises.push(stock.toJSON(userID))
+        });
+
+        Promise.all(promises).then(function (stocks) {
+            callback(stocks);
+        });
+
+    };
+
+    /* Вспомогательные методы */
+
+    StockSchema.methods.checkOwner = function (companyID) {
+        return this.company == companyID;
+    };
+
+    StockSchema.methods.prepareRemove = function (callback) {
+        var subscribers = this.subscribes;
+        var self = this;
+
+        this.removeImages((err) => {
             if (err) {
                 callback(err);
                 return;
             }
 
-            if (!stock) {
-                callback(new Error('Нет акции с айди ' + id));
-                return;
-            }
+            var Client = mongoose.model('Client');
 
-            stock.toJSON().then((stock) => {
-                callback(null, stock);
+            Client.find({_id: {$in: subscribers}}, (err, clients) => {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
+                clients.forEach((client) => {
+                    client.unsubscribe(self._id.toString())
+                });
+
+                callback(null, 'ok');
             });
         });
     };
@@ -294,7 +296,7 @@ module.exports = function (logger) {
         logger.info('Сохраняю акцию ' + this._id);
         next();
     });
-
     mongoose.model('Stock', StockSchema);
+
     logger.info('Подключил модель Stock');
 };
