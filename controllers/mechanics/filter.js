@@ -15,7 +15,7 @@ router.get('/', mw.requireClientAuth, (req, res) => {
 
     Stock.byQuery(query, req.user._id.toString(), (err, stocks) => {
         if (err) {
-            throw err;
+            return next(err);
         }
 
         req.logger.info('Отправляю клиенту найденные акции');
@@ -27,7 +27,7 @@ router.get('/', mw.requireClientAuth, (req, res) => {
 router.get('/company', mw.requireClientAuth, (req, res) => {
     Stock.byCompanyID(req.query.companyID, req.user._id.toString(), (err, stocks) => {
         if (err) {
-            throw err;
+            return next(err);
         }
 
         req.logger.info('У компании ' + req.query.companyID + ' ' + stocks.length + ' акций. Отправляю клиенту');
@@ -40,7 +40,7 @@ router.get('/search', mw.requireClientAuth, (req, res) => {
 
     Stock.bySearchWord(searchWord, req.user._id.toString(), (err, stocks) => {
         if (err) {
-            throw err;
+            return next(err);
         }
 
         req.logger.info('Поиск по запросу ' + searchWord + ' нашел ' + stocks.length + ' акций');
