@@ -9,7 +9,7 @@ module.exports = function (logger) {
         address: String,
         filters: [{id: String, name: String}],
         FIO: String,
-        friends: [{id: String}],
+        friends: [String],
         mail: String,
         phone: String,
         stocks: [String]
@@ -83,6 +83,37 @@ module.exports = function (logger) {
         this.stocks.splice(stockPosition, 1);
         logger.info('Пользователь ' + this.login + ' отписался от акции ' + id);
         this.save();
+    };
+
+    ClientSchema.methods.addFriend = function(id, callback) {
+        if (this.friends.indexOf(id) == -1) {
+            this.friends.push(id);
+            this.save();
+            callback(null);
+        } else {
+            callback(new JSONError('error', 'Этот пользователь уже в друзьях'));
+        }
+    };
+
+    ClientSchema.methods.removeFriend = function(id, callback) {
+        var idPosition = this.friends.indexOf(id);
+        if (idPosition == -1) {
+            callback(new JSONError('error', 'Этого пользователя нет в друзьях'));
+        } else {
+            this.friends.slice(idPosition, 1);
+            this.save();
+            callback(null);
+        }
+    };
+
+    ClientSchema.methods.toJSON = function (){
+      return {
+          'FIO': this.FIO,
+          'mail': this.mail,
+          'phone': this.phone,
+          'friends': this.friends,
+          'login': this.login
+      }
     };
 
     User.discriminator('Client', ClientSchema);

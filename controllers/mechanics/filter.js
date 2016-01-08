@@ -1,7 +1,9 @@
 var express  = require('express');
 var mw       = require('../../utils/middlewares.js');
 var mongoose = require('mongoose');
+var ObjectID = require('mongodb').ObjectID;
 var Stock    = mongoose.model('Stock');
+var Client   = mongoose.model('Client');
 var router   = express.Router();
 
 router.get('/', mw.requireClientAuth, (req, res) => {
@@ -43,6 +45,40 @@ router.get('/search', mw.requireClientAuth, (req, res) => {
 
         req.logger.info('Поиск по запросу ' + searchWord + ' нашел ' + stocks.length + ' акций');
         res.JSONAnswer('stocks', stocks);
+    });
+});
+
+router.get('friends', mw.requireClientAuth, (req, res, next) => {
+    var friendsID = req.client.friends.map((id) => new ObjectID(id));
+
+    Client.find({_id: {$in: friendsID}}, (err, friends) => {
+        if (err) {
+            return next(err);
+        }
+
+        var stocksID = [];
+
+        friends.forEach((friend) => {
+            friend.stocks.forEach((stock) => {
+                if (stocksID.indexOf(stock) == -1) {
+                    stocksID.push(new ObjectID(stock));
+                }
+            });
+        });
+
+        Stock.find({id: {$in: stocksID}}, (err, stocks) => {
+            if (err) {
+                return next(err);
+            }
+
+            Stock.arrayToJSON(req.client._id, stocks, (err, stocksJSON) => {
+                if (err) {
+                    return next(err);
+                }
+
+                res.JSONAnswer('friendsfeed', stocksJSON);
+            });
+        });
     });
 });
 
