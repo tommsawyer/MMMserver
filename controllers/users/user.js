@@ -3,6 +3,7 @@ var mw        = require('../../utils/middlewares.js');
 var mongoose  = require('mongoose');
 var Stocks    = require('../models/stocks.js');
 var Companies = require('../models/companies.js');
+var Categories   = require('../models/categories.js');
 
 var Client    = mongoose.model('Client');
 var router    = express.Router();
@@ -42,5 +43,6 @@ router.post('/authorize', mw.checkLoginAndPassword, (req, res) => {
 router.use(mw.checkClientToken);
 router.use('/stocks', Stocks);
 router.use('/companies', Companies);
+router.use('/categories', Categories);
 
 module.exports = router;

@@ -4,6 +4,7 @@ var storages    = require('../../utils/storages.js');
 var mw          = require('../../utils/middlewares.js');
 var Stocks      = require('../models/stocks.js');
 var Companies   = require('../models/companies.js');
+var Categories   = require('../models/categories.js');
 var JSONError   = require('../../lib/json_error');
 var mail        = require('../../utils/mail.js');
 var multer      = require('multer'); // миддлвеар для загрузки файлов
@@ -87,5 +88,6 @@ router.use('/stocks/edit',   stockLogo.single('logo'));
 router.use(mw.checkCompanyToken);
 router.use('/stocks',    Stocks);
 router.use('/companies', Companies);
+router.use('/categories', Categories);
 
 module.exports = router;

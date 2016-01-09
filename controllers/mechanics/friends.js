@@ -39,5 +39,4 @@ router.get('all', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
-
 module.exports = router;

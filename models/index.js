@@ -3,4 +3,5 @@ module.exports = function(logger) {
     require('./stock.js')(logger);
     require('./client.js')(logger);
     require('./company.js')(logger);
+    require('./category.js')(logger);
 };
