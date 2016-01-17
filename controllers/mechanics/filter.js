@@ -48,8 +48,8 @@ router.get('/search', mw.requireClientAuth, (req, res) => {
     });
 });
 
-router.get('friends', mw.requireClientAuth, (req, res, next) => {
-    var friendsID = req.client.friends.map((id) => new ObjectID(id));
+router.get('/friends', mw.requireClientAuth, (req, res, next) => {
+    var friendsID = req.user.friends.map((id) => new ObjectID(id));
 
     Client.find({_id: {$in: friendsID}}, (err, friends) => {
         if (err) {
