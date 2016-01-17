@@ -6,10 +6,10 @@ var JSONError = require('../../lib/json_error');
 var Company   = mongoose.model('Company');
 var router    = express.Router();
 
-router.get('/all', mw.requireClientAuth, (req, res) => {
+router.get('/all', mw.requireClientAuth, (req, res, next) => {
     Company.find({}, (err, companies) => {
         if (err) {
-            throw err;
+            next(err);
         }
 
         if (!companies){

@@ -9,7 +9,7 @@ var JSONError = require('../../lib/json_error');
 
 router.use('/filter', filter);
 
-router.post('/create', mw.requireCompanyAuth, (req, res) => {
+router.post('/create', mw.requireCompanyAuth, (req, res, next) => {
     if (!req.file) {
         req.logger.warn('Запрос создания акции без логотипа');
     }
@@ -33,7 +33,7 @@ router.post('/create', mw.requireCompanyAuth, (req, res) => {
     });
 });
 
-router.post('/edit', mw.requireCompanyAuth, (req, res) => {
+router.post('/edit', mw.requireCompanyAuth, (req, res, next) => {
     Stock.findOne({'_id' : new ObjectID(req.body.id)}, (err, stock) => {
         if (err) {
             return next(err);
@@ -87,7 +87,7 @@ router.post('/edit', mw.requireCompanyAuth, (req, res) => {
     });
 });
 
-router.post('/remove', mw.requireCompanyAuth, (req, res) => {
+router.post('/remove', mw.requireCompanyAuth, (req, res, next) => {
     Stock.findOne({_id: req.body.id}, (err, stock) => {
         if (err) {
             return next(err);
@@ -112,7 +112,7 @@ router.post('/remove', mw.requireCompanyAuth, (req, res) => {
     });
 });
 
-router.post('/subscribe', mw.requireClientAuth, (req, res) => {
+router.post('/subscribe', mw.requireClientAuth, (req, res, next) => {
     req.user.subscribe(req.body.id, (err, stock) => {
         if (err) {
             return next(err);
@@ -129,7 +129,7 @@ router.post('/subscribe', mw.requireClientAuth, (req, res) => {
     });
 });
 
-router.post('/unsubscribe', mw.requireClientAuth, (req, res) => {
+router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
     Stock.findOne({'_id':new ObjectID(req.body.id)}, (err, stock) => {
         if (err) {
             return next(err);
@@ -145,7 +145,7 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res) => {
     });
 });
 
-router.get('/feed', mw.requireClientAuth, (req, res) => {
+router.get('/feed', mw.requireClientAuth, (req, res, next) => {
     req.user.getSubscribitions((err, stocks) => {
         if (err) {
             return next(err);
@@ -161,10 +161,10 @@ router.get('/all', mw.requireClientAuth, (req, res) => {
     });
 });
 
-router.get('/me', mw.requireCompanyAuth, (req, res) => {
+router.get('/me', mw.requireCompanyAuth, (req, res, next) => {
     Stock.byCompanyID(req.company._id, undefined,  (err, stocks) => {
         if (err) {
-            throw err;
+            return next(err);
         }
 
         req.logger.info('Отправляю клиенту акции компании ' + req.company.login);
