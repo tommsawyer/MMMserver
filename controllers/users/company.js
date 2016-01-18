@@ -13,7 +13,7 @@ var stockLogo   = multer({storage: storages.stockStorage});
 var Company     = mongoose.model('Company');
 var router      = express.Router();
 
-router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (req, res) => {
+router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (req, res, next) => {
     if (!req.file) {
         req.logger.info('Нет логотипа при регистрации компании');
         return next(new JSONError('register', 'Необходим логотип при регистрации компании'));
@@ -51,7 +51,7 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
 
 });
 
-router.post('/authorize', (req, res) => {
+router.post('/authorize', (req, res, next) => {
     Company.authorize(req.body.login, req.body.password, (err, company) => {
         if (err) {
             return next(err);
@@ -70,7 +70,7 @@ router.post('/authorize', (req, res) => {
     });
 });
 
-router.get('/activate', (req, res) => {
+router.get('/activate', (req, res, next) => {
     var activationHash = req.query.hash;
 
     Company.tryActivateByHash(activationHash, (err, company) => {

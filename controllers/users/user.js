@@ -8,7 +8,7 @@ var Friends   = require('../mechanics/friends.js');
 var Client    = mongoose.model('Client');
 var router    = express.Router();
 
-router.post('/register', mw.checkLoginAndPassword, (req, res) => {
+router.post('/register', mw.checkLoginAndPassword, (req, res, next) => {
     Client.byLogin(req.body.login, (err, client) => {
         if (client) {
             req.logger.info('Пользователь с логином ' + req.body.login + ' уже существует');
@@ -27,7 +27,7 @@ router.post('/register', mw.checkLoginAndPassword, (req, res) => {
     });
 });
 
-router.post('/authorize', mw.checkLoginAndPassword, (req, res) => {
+router.post('/authorize', mw.checkLoginAndPassword, (req, res, next) => {
     Client.authorize(req.body.login, req.body.password, (err, client) => {
         if (err) {
             return next(err);
