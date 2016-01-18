@@ -36,7 +36,7 @@ module.exports = function (logger) {
             }
 
             Stock.arrayToJSON(self._id, stocks, (stocksJSON) => {
-                callback(null, stocks);
+                callback(null, stocksJSON);
             });
         });
     };
