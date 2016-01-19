@@ -78,7 +78,7 @@ router.get('/activate', (req, res, next) => {
             return next(err);
         }
 
-        res.end('Компания успешно активирована!');
+        res.redirect("http://shappy-ru.1gb.ru/html/verify.html?token=" + company.getToken());
     });
 });
 
