@@ -28,17 +28,17 @@ module.exports = {
 
         Company.findOne({'token.value': token}, (err, company) => {
             if (err) {
-                throw err;
+                return next(err);
             }
 
             if (!company || !token) {
                 req.logger.warn('Не найдена компания с токеном ' + token);
-                next();
+                return next();
             }
 
             if (!company.active){
                 res.logger.warn('Запрос от неактивированной компании');
-                next();
+                return next();
             }
 
             req.company = company;
@@ -53,7 +53,7 @@ module.exports = {
 
         Client.findOne({'token.value': token}, (err, user) => {
             if (err) {
-                throw err;
+                return next(err);
             }
 
             if (!user || !token) {
