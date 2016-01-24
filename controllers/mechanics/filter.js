@@ -49,7 +49,7 @@ router.get('/search', mw.requireClientAuth, (req, res) => {
 });
 
 router.get('/friends', mw.requireClientAuth, (req, res, next) => {
-    var friendsID = req.user.friends.map((id) => new ObjectID(id));
+    var friendsID = req.user.friends.map((id) => {return new ObjectID(id)});
 
     Client.find({_id: {$in: friendsID}}, (err, friends) => {
         if (err) {
@@ -61,13 +61,15 @@ router.get('/friends', mw.requireClientAuth, (req, res, next) => {
         friends.forEach((friend) => {
             friend.stocks.forEach((stock) => {
                 if (stocksID.indexOf(stock) == -1) {
-                    stocksID.push(new ObjectID(stock));
+                    stocksID.push(stock);
                 }
             });
         });
 
         if (stocksID.length == 0) {
             return res.JSONAnswer('friendsfeed', []);
+        } else {
+            stocksID = stocksID.map((stock) => {return new ObjectID(stock)});
         }
 
         Stock.find({id: {$in: stocksID}}, (err, stocks) => {
