@@ -72,20 +72,16 @@ router.get('/friends', mw.requireClientAuth, (req, res, next) => {
             stocksID = stocksID.map((stock) => {return new ObjectID(stock)});
         }
 
-        Stock.find({id: {$in: stocksID}}, (err, stocks) => {
+        Stock.find({_id: {$in: stocksID}}, (err, stocks) => {
             if (err) {
                 return next(err);
             }
 
-            if (!stocks) {
+            if (stocks.length == []) {
                 return res.JSONAnswer('friendsfeed', []);
             }
 
-            Stock.arrayToJSON(req.client._id, stocks, (err, stocksJSON) => {
-                if (err) {
-                    return next(err);
-                }
-
+            Stock.arrayToJSON(req.client._id, stocks, (stocksJSON) => {
                 res.JSONAnswer('friendsfeed', stocksJSON);
             });
         });

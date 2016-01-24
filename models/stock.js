@@ -249,6 +249,7 @@ module.exports = function (logger) {
 
     StockSchema.statics.arrayToJSON = function (userID, stocks, callback) {
         var promises = [];
+
         stocks.forEach((stock) => {
             promises.push(stock.toJSON(userID))
         });
