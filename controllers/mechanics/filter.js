@@ -66,9 +66,17 @@ router.get('/friends', mw.requireClientAuth, (req, res, next) => {
             });
         });
 
+        if (stocksID.length == 0) {
+            return res.JSONAnswer('friendsfeed', []);
+        }
+
         Stock.find({id: {$in: stocksID}}, (err, stocks) => {
             if (err) {
                 return next(err);
+            }
+
+            if (!stocks) {
+                return res.JSONAnswer('friendsfeed', []);
             }
 
             Stock.arrayToJSON(req.client._id, stocks, (err, stocksJSON) => {
