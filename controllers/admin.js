@@ -16,9 +16,15 @@ router.get('/clearlogs', (req, res) => {
 });
 
 router.post('/category', (req, res) => {
+    var parentCategory = null;
+
+    if (req.body.parent) {
+        parentCategory = new ObjectID(req.body.parent);
+    }
+
     Category.create({
         name: req.body.name,
-        parentCategory: new ObjectID(req.body.parent)
+        parentCategory: parentCategory
     });
     res.end('OK');
 });
