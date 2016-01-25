@@ -20,7 +20,8 @@ router.get('/stocksperdate', mw.requireCompanyAuth, (req, res, next) => {
 
         stocks.forEach((stock) => {
             stock.subscribes.forEach((subscr) => {
-                dates[subscr.date] = dates[subscr.date] + 1 || 1;
+                var date = subscr.date.toDateString();
+                dates[date] = dates[date] + 1 || 1;
             });
         });
 
