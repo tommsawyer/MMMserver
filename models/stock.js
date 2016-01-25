@@ -226,6 +226,7 @@ module.exports = function (logger) {
                     logo: self.logo,
                     thumb: self.thumb,
                     company: company,
+                    subscribes: self.subscribes,
                     subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
                     startDate: self.startDate,
                     endDate: self.endDate
