@@ -9,7 +9,6 @@ var ObjectID = require('mongodb').ObjectId;
 
 router.get('/stocksperdate', mw.requireCompanyAuth, (req, res, next) => {
     Stock.byCompanyID(req.company._id, null, (err, stocks) => {
-        console.log(stocks);
         if (err) {
             return next(err);
         }
@@ -50,6 +49,25 @@ router.get('/usersperstock', mw.requireCompanyAuth, (req, res, next) => {
         });
 
         res.JSONAnswer('usersperstock', dates);
+    });
+});
+
+router.get('/countperstock', mw.requireCompanyAuth, (req, res, next) => {
+    Stock.byCompanyID(req.company._id, null, (err, stocks) => {
+        if (err) return next(err);
+
+        if (stocks.length == 0) {
+            return res.JSONAnswer('countperstock', {});
+        }
+
+        var data = {};
+
+        stocks.forEach((stock) => {
+           data[stock.name] = stock.subscribes.length;
+        });
+
+        res.JSONAnswer('countperstock', data);
+
     });
 });
 
