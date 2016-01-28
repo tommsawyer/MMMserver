@@ -42,6 +42,8 @@ module.exports = function (logger) {
         }
 
         this.subscribes.splice(pos, 1);
+        logger.info('Удаляю подписчика от акции ' + this._id);
+        this.save();
         callback(null);
     };
 

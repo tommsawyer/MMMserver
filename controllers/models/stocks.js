@@ -134,7 +134,7 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
         if (err) {
             return next(err);
         }
-        stock.removeSubscriber(req.user._id, (err) => {
+        stock.removeSubscriber(req.user._id.toString(), (err) => {
             if (err) {
                 return next(err);
             }
