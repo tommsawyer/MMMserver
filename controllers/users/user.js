@@ -33,10 +33,12 @@ router.post('/authorize', mw.checkLoginAndPassword, (req, res, next) => {
             return next(err);
         }
 
-        var token = client.getToken();
+        var userInfo = client.toJSON();
+        userInfo['token'] = client.getToken();
 
         req.logger.info('Авторизовался пользователь ' + req.body.login);
-        res.JSONAnswer('token', token);
+
+        res.JSONAnswer('userinfo', userInfo);
     });
 });
 
