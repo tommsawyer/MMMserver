@@ -84,7 +84,7 @@ module.exports = {
 
     requireAnyAuth: function(req, res, next){
         if (!req.company && !req.user){
-            return next(new JSONError('Доступ запрещен', 'error', 403));
+            return next(new JSONError('error', 'Доступ запрещен', 403));
         }
 
         next();

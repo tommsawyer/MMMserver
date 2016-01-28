@@ -145,6 +145,25 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/info', mw.requireAnyAuth, (req, res, next) => {
+    try {
+        var stockID = new ObjectID(req.query.id);
+    } catch (e) {
+        return next(new JSONError('stockinfo', 'Нет такой акции', 404));
+    }
+
+
+    Stock.findOne({_id: stockID}, (err, stock) => {
+        if (err) return next(err);
+
+        if (!stock) return next(new JSONError('stockinfo', 'Нет такой акции', 404));
+
+        stock.toJSON(req.user ? req.user._id : undefined).then((stockJSON) => {
+            res.JSONAnswer('stockinfo', stockJSON);
+        });
+    });
+});
+
 router.get('/feed', mw.requireClientAuth, (req, res, next) => {
     req.user.getSubscribitions((err, stocks) => {
         if (err) {
