@@ -39,4 +39,12 @@ router.get('/all', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/filter', mw.requireClientAuth, (req, res, next) => {
+    Client.byFilter(req.query.FIO, req.query.mail, req.query.phone, (err, users) => {
+        if (err) return next(err);
+
+        res.JSONAnswer('friendsfilter', users);
+    });
+});
+
 module.exports = router;

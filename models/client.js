@@ -116,6 +116,38 @@ module.exports = function (logger) {
       }
     };
 
+    ClientSchema.statics.byFilter = function(FIO, mail, phone, callback) {
+        var fields = {
+            'FIO': FIO,
+            'mail': mail,
+            'phone': phone
+        };
+
+        var query = {
+            $or: []
+        };
+
+        for (var name in fields) {
+            if (fields[name]) {
+              var obj = {};
+              obj[name] = new RegExp('.*' + fields[name] + '.*', 'i');
+              query.$or.push(obj);
+            }
+        }
+
+        if (Object.keys(query.$or).length == 0) return callback(new JSONError('filter', 'Не заполнены поля', 400));
+
+        this.find(query, (err, clients) => {
+            if (err) return callback(err);
+
+            if (clients.length == 0) return callback(null, []);
+
+            callback(null, clients.map((client) => {
+                return client.toJSON();
+            }));
+        });
+    };
+
     User.discriminator('Client', ClientSchema);
     logger.info('Подключил модель Client');
 };
