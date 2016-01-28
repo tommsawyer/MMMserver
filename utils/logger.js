@@ -45,6 +45,33 @@ class Logger {
             }
         }
     }
+
+    _isObject(obj) {
+        return Object.prototype.toString.call(obj) === '[object Object]';
+    }
+
+    _inspect(obj) {
+        var result = "{"
+        for (var key in obj) {
+            if (this._isObject(obj[key])) {
+                result += key + ': ' + this._inspect(obj[key]);
+            } else if (obj[key] instanceof Array) {
+                result += key + ': [';
+                obj[key].forEach((element) => {
+                    result += this._inspect(element) + ', ';
+                });
+                result += '] ';
+            } else {
+                result += key + ': ' + obj[key] +'; ';
+            }
+        }
+        result += '}';
+        return result;
+    }
+
+    inspect(msg, obj) {
+        this.info(msg + ' ' + this._inspect(obj));
+    }
 }
 
 module.exports = Logger;

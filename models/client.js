@@ -137,6 +137,8 @@ module.exports = function (logger) {
 
         if (Object.keys(query.$or).length == 0) return callback(new JSONError('filter', 'Не заполнены поля', 400));
 
+        logger.inspect('Поисковые параметры: ', query);
+
         this.find(query, (err, clients) => {
             if (err) return callback(err);
 
