@@ -112,6 +112,30 @@ module.exports = function (logger) {
         this.save();
     };
 
+    ClientSchema.methods.subscribeToCategory = function (id, callback) {
+        if (this.filters.categories.indexOf(id) != -1) {
+            return callback(new JSONError('error', 'Вы уже подписаны на эту категорию'));
+        }
+
+        this.filters.categories.push(id);
+        logger.info('Пользователь ' + this.login + ' подписался на категорию с айди ' + id.toString());
+        callback(null);
+        this.save();
+    };
+
+    ClientSchema.methods.unsubscribeFromCategory = function (id, callback) {
+        var categoryPosition = this.filters.categories.indexOf(id);
+
+        if (categoryPosition == -1) {
+            return callback(new JSONError('error', 'Вы не подписаны на эту категорию'));
+        }
+
+        this.filters.categories.splice(categoryPosition, 1);
+        logger.info('Пользователь ' + this.login + ' отписался от категории с айди ' + id.toString());
+        callback(null);
+        this.save();
+    };
+
     ClientSchema.methods.addFriend = function(id, callback) {
         if (this.friends.indexOf(id) == -1) {
             this.friends.push(id);
