@@ -111,6 +111,26 @@ module.exports = function (logger) {
 
     /* Выборка */
 
+    StockSchema.statics.byUserFilter = function(userID, filter, callback) {
+        var Stock = mongoose.model('Stock');
+
+        var query = {
+            $or: [
+                {company:  {$in: filter.companies.map((comp) => {return comp.toString()}) }},
+                {category: {$in: filter.categories}}
+            ]
+        };
+
+        this.find(query, (err, stocks) => {
+            if (err) return callback(err);
+            if (stocks.length == 0) return callback(null, []);
+
+            Stock.arrayToJSON(userID, stocks, (stocksJSON) => {
+               callback(null, stocksJSON);
+            });
+        });
+    };
+
     StockSchema.statics.bySearchWord = function (word, userID, callback) {
         var searchRegExp = new RegExp('.*' + word + '.*', 'i');
         this.find({

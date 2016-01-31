@@ -75,6 +75,14 @@ router.get('/search', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/subscribitions', mw.requireClientAuth, (req, res, next) => {
+    Stock.byUserFilter(req.user._id.toString(), req.user.filters, (err, stocks) => {
+        if (err) return next(err);
+
+        res.JSONAnswer('subscribitions', stocks);
+    });
+});
+
 router.get('/friends', mw.requireClientAuth, (req, res, next) => {
     var friendsID = req.user.friends.map((id) => {return new ObjectID(id)});
 
