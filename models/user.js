@@ -51,7 +51,7 @@ module.exports = function (logger) {
             }
 
             if (!user){
-                callback(new JSONError('error', 'Не найден юзер с логином ' + login), 404);
+                callback(new JSONError('error', 'Не найден юзер с логином ' + login, 404));
                 return;
             }
 
