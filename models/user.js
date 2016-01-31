@@ -1,7 +1,8 @@
 module.exports = function (logger) {
-    var mongoose = require('mongoose');
-    var Schema = mongoose.Schema;
-    var SHA256 = require('crypto-js/sha256');
+    var mongoose  = require('mongoose');
+    var Schema    = mongoose.Schema;
+    var JSONError = require('../lib/json_error');
+    var SHA256    = require('crypto-js/sha256');
 
     var UserSchema = new Schema({
         login: {
@@ -50,7 +51,7 @@ module.exports = function (logger) {
             }
 
             if (!user){
-                callback(new Error('Не найден юзер с логином ' + login));
+                callback(new JSONError('error', 'Не найден юзер с логином ' + login), 404);
                 return;
             }
 
@@ -68,7 +69,7 @@ module.exports = function (logger) {
             if (user.checkPassword(password)){
                 callback(null, user);
             } else {
-                callback(new Error('Неправильный пароль'));
+                callback(new JSONError('error', 'Неправильный пароль!'));
             }
         });
     };
