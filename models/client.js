@@ -7,7 +7,10 @@ module.exports = function (logger) {
 
     var ClientSchema = new Schema({
         address: String,
-        filters: [{id: String, name: String}],
+        filters: {
+            companies: [Schema.Types.ObjectId],
+            categories: [Schema.Types.ObjectId]
+        },
         FIO: String,
         friends: [String],
         mail: String,
@@ -82,6 +85,30 @@ module.exports = function (logger) {
 
         this.stocks.splice(stockPosition, 1);
         logger.info('Пользователь ' + this.login + ' отписался от акции ' + id);
+        this.save();
+    };
+
+    ClientSchema.methods.subscribeToCompany = function (id, callback) {
+        if (this.filters.companies.indexOf(id) != -1) {
+            return callback(new JSONError('error', 'Вы уже подписаны на эту компанию'));
+        }
+
+        this.filters.companies.push(id);
+        logger.info('Пользователь ' + this.login + ' подписался на компанию с айди ' + id.toString());
+        callback(null);
+        this.save();
+    };
+
+    ClientSchema.methods.unsubscribeFromCompany = function (id, callback) {
+        var companyPosition = this.filters.companies.indexOf(id);
+
+        if (companyPosition == -1) {
+            return callback(new JSONError('error', 'Вы не подписаны на эту компанию'));
+        }
+
+        this.filters.companies.splice(companyPosition, 1);
+        logger.info('Пользователь ' + this.login + ' отписался от компании с айди ' + id.toString());
+        callback(null);
         this.save();
     };
 

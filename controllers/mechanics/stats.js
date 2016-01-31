@@ -67,7 +67,6 @@ router.get('/countperstock', mw.requireCompanyAuth, (req, res, next) => {
         });
 
         res.JSONAnswer('countperstock', data);
-
     });
 });
 

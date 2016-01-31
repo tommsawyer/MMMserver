@@ -51,4 +51,52 @@ router.get('/info', mw.requireAnyAuth, (req, res, next) => {
 
 });
 
+router.post('/subscribe', mw.requireClientAuth, (req, res, next) => {
+    try {
+        var CompanyID = new ObjectID(req.body.id);
+    } catch (e) {
+        return next(new JSONError('error', 'Компании с таким айди не найдено', 404));
+    }
+
+    Company.findOne({_id: CompanyID}, (err, company) => {
+        if (err) return next(err);
+
+        if (!company) return next(new JSONError('error', 'Компании с таким айди не найдено', 404));
+
+        req.user.subscribeToCompany(company._id, (err) => {
+            if (err) return next(err);
+
+            company.addSubscriber(req.user._id, (err) => {
+                if (err) req.logger.error(err);
+            });
+
+            res.JSONAnswer('company', 'success');
+        });
+    });
+});
+
+router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
+    try {
+        var CompanyID = new ObjectID(req.body.id);
+    } catch (e) {
+        return next(new JSONError('error', 'Компании с таким айди не найдено', 404));
+    }
+
+    Company.findOne({_id: CompanyID}, (err, company) => {
+        if (err) return next(err);
+
+        if (!company) return next(new JSONError('error', 'Компании с таким айди не найдено', 404));
+
+        req.user.unsubscribeFromCompany(company._id, (err) => {
+            if (err) return next(err);
+
+            company.removeSubscriber(req.user._id, (err) => {
+                if (err) req.logger.error(err);
+            });
+
+            res.JSONAnswer('company', 'success');
+        });
+    });
+});
+
 module.exports = router;
