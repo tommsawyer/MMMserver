@@ -13,12 +13,18 @@ var companyLogo = multer({storage: storages.companyStorage});
 var stockLogo   = multer({storage: storages.stockStorage});
 var Company     = mongoose.model('Company');
 var router      = express.Router();
+var ObjectID    = require('mongodb').ObjectId;
 
 router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (req, res, next) => {
     if (!req.file) {
         req.logger.info('Нет логотипа при регистрации компании');
         return next(new JSONError('register', 'Необходим логотип при регистрации компании'));
     }
+
+    var categoryID = null;
+    try {
+       categoryID = new ObjectID(req.body.category);
+    } catch (e) {}
 
     Company.byLogin(req.body.login, (err, company) => {
         if (company) {
@@ -28,6 +34,7 @@ router.post('/register', companyLogo.single('logo'), mw.checkLoginAndPassword, (
 
         Company.create({
             login: req.body.login,
+            category: categoryID,
             password: req.body.password,
             email: req.body.email,
             name: req.body.name,
