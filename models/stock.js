@@ -12,6 +12,7 @@ module.exports = function (logger) {
         name: String,
         description: String,
         company: String,
+        category: Schema.Types.ObjectId,
         logo: String,
         thumb: String,
         subscribes: [{

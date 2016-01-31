@@ -14,8 +14,15 @@ router.post('/create', mw.requireCompanyAuth, (req, res, next) => {
         req.logger.warn('Запрос создания акции без логотипа');
     }
 
+    var categoryID = null;
+
+    try {
+        categoryID = new ObjectID(req.body.category);
+    } catch (e) {}
+
     var stock = new Stock({
         name: req.body.name,
+        category: categoryID,
         description: req.body.description,
         company: req.company._id,
         startDate: new Date(req.body.startDate),
@@ -174,7 +181,7 @@ router.get('/feed', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
-router.get('/all', mw.requireClientAuth, (req, res) => {
+router.get('/all', mw.requireClientAuth, (req, res, next) => {
     Stock.allToJSON(req.user._id.toString(), function (stocks) {
         res.JSONAnswer('stock', stocks);
     });

@@ -9,6 +9,7 @@ module.exports = function (logger) {
         name: String,
         INN: String,
         OGRN: String,
+        category: Schema.Types.ObjectId,
         parentCompany: String,
         region: String,
         email: String,

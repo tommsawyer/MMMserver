@@ -23,7 +23,7 @@ router.get('/all', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
-router.get('/me', mw.requireCompanyAuth, (req, res) => {
+router.get('/me', mw.requireCompanyAuth, (req, res, next) => {
     req.logger.info('Присылаю информацию о компании ' + req.company._id);
     res.JSONAnswer('company', req.company.toJSON());
 });
