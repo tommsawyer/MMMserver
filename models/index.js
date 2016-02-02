@@ -1,7 +1,14 @@
 module.exports = function(logger) {
-    require('./user.js')(logger);
-    require('./stock.js')(logger);
-    require('./client.js')(logger);
-    require('./company.js')(logger);
-    require('./category.js')(logger);
+    const modelFiles = [
+        'user.js',
+        'stock.js',
+        'client.js',
+        'company.js',
+        'category.js',
+        'archived_subscription.js'
+    ];
+
+    modelFiles.forEach((model) => {
+       require('./' + model)(logger);
+    });
 };
