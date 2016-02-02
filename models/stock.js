@@ -129,6 +129,22 @@ module.exports = function (logger) {
 
     /* Выборка */
 
+    StockSchema.statics.bySubscribitionCode = function(code, callback) {
+        var query = {
+            subscribes: {
+                $elemMatch: {
+                    code: code
+                }
+            }
+        };
+
+        this.findOne(query, (err, stock) => {
+            if (err) callback(err);
+
+            callback(null, stock);
+        });
+    };
+
     StockSchema.statics.byUserFilter = function(userID, filter, callback) {
         var Stock = mongoose.model('Stock');
 
