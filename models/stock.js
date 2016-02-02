@@ -71,6 +71,32 @@ module.exports = function (logger) {
         }
     };
 
+    StockSchema.methods.incrementNumberOfUses = function (code) {
+        for (var i=0; i < this.subscribes.length; i++) {
+            if (this.subscribes[i].code == code) {
+                this.subscribes[i].numberOfUses++;
+                this.save();
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    StockSchema.methods.getUserByCode = function(code, callback) {
+        var Client = mongoose.model('Client');
+
+        this.subscribes.forEach((subscr) => {
+           if (subscr.code == code) {
+               Client.findOne({_id: new ObjectID(subscr.id)}, (err, client) => {
+                   if (err) return callback(err);
+
+                   callback(null, client.toJSON());
+               });
+           }
+        });
+    };
+
     StockSchema.methods.removeSubscriber = function (userID, callback) {
         var pos = this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID);
         var ArchivedSubscription = mongoose.model('ArchivedSubscription');
@@ -157,7 +183,7 @@ module.exports = function (logger) {
 
     /* Выборка */
 
-    StockSchema.statics.bySubscribitionCode = function(code, callback) {
+    StockSchema.statics.bySubscriptionCode = function(code, callback) {
         var query = {
             subscribes: {
                 $elemMatch: {
@@ -167,7 +193,8 @@ module.exports = function (logger) {
         };
 
         this.findOne(query, (err, stock) => {
-            if (err) callback(err);
+            if (err) return callback(err);
+            if (!stock) return callback(new JSONError('error', 'Не найдено акции с таким активационным кодом', 404));
 
             callback(null, stock);
         });

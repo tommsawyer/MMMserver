@@ -152,6 +152,27 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.post('/apply', mw.requireCompanyAuth, (req, res, next) => {
+    var code = req.body.code;
+
+    Stock.bySubscriptionCode(code, (err, stock) => {
+        if (err) return next(err);
+
+        stock.incrementNumberOfUses(code);
+
+        stock.getUserByCode(code, (err, clientJSON) => {
+            if (err) return next(err);
+
+            stock.toJSON().then((stockJSON) => {
+               res.JSONAnswer('apply', {
+                   user: clientJSON,
+                   stock: stockJSON
+               });
+            });
+        });
+    });
+});
+
 router.get('/info', mw.requireAnyAuth, (req, res, next) => {
     try {
         var stockID = new ObjectID(req.query.id);
