@@ -38,7 +38,7 @@ module.exports = function (logger) {
                 return;
             }
 
-            Stock.arrayToJSON(self._id, stocks, (stocksJSON) => {
+            Stock.arrayToJSON(self._id.toString(), stocks, (stocksJSON) => {
                 callback(null, stocksJSON);
             });
         });
@@ -71,7 +71,7 @@ module.exports = function (logger) {
 
             subscribes.push(id);
             this.stocks = subscribes;
-            stock.addSubscriber(this._id.toString());
+            stock.addSubscriber(this._id.toString(), (err) => {if (err) logger.error(err)});
             callback(null, stock);
         });
     };

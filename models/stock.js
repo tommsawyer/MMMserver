@@ -17,7 +17,8 @@ module.exports = function (logger) {
         thumb: String,
         subscribes: [{
             id: String,
-            date: Date
+            date: Date,
+            code: String
         }],
         startDate: Date,
         endDate: Date
@@ -25,13 +26,24 @@ module.exports = function (logger) {
 
     /* Подписки */
 
-    StockSchema.methods.addSubscriber = function (id) {
-        logger.info('Добавляю подписчика к акции ' + this._id);
-        this.subscribes.push({
-            'id'  : id,
-            'date': new Date()
-        });
-        this.save();
+    StockSchema.statics.generateSubscribition = function(userID) {
+        var code = Math.round(Math.random() * Math.pow(10, 10)).toString();
+        logger.info('Сгенерировал код подписки на акцию: ' + code);
+        return {
+            id: userID,
+            date: new Date(),
+            code: code
+        }
+    };
+
+    StockSchema.methods.addSubscriber = function (id, callback) {
+        if (this.isSubscribed(id)) {
+            callback(new JSONError('error', 'Вы уже подписаны на эту акцию!'));
+        } else {
+            this.subscribes.push(this.constructor.generateSubscribition(id));
+            this.save();
+            callback(null);
+        }
     };
 
     StockSchema.methods.removeSubscriber = function (userID, callback) {
@@ -54,6 +66,12 @@ module.exports = function (logger) {
 
     StockSchema.methods.getSubscribitionsDates = function() {
         return this.subscribes.map((subscr) => {return subscr.date});
+    };
+
+    StockSchema.methods.getSubscribitionCode = function(userID) {
+        var pos = this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID);
+        if (pos == -1) return null;
+        return this.subscribes[pos].code;
     };
 
     /* Изображения */
@@ -242,7 +260,7 @@ module.exports = function (logger) {
                     company = company.toJSON();
                 }
 
-                resolve({
+                var answer = {
                     name: self.name,
                     description: self.description,
                     id: self._id,
@@ -250,10 +268,19 @@ module.exports = function (logger) {
                     thumb: self.thumb,
                     company: company,
                     subscribes: self.subscribes,
-                    subscribed: (userID === undefined ? null : self.isSubscribed(userID)),
                     startDate: self.startDate,
                     endDate: self.endDate
-                });
+                };
+
+                if (userID != undefined) {
+                    var subscribed = self.isSubscribed(userID);
+                    answer['subscribed'] = subscribed;
+                    if (subscribed) {
+                        answer['code'] = self.getSubscribitionCode(userID);
+                    }
+                }
+
+                resolve(answer);
             });
         });
     };
