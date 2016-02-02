@@ -16,6 +16,7 @@ module.exports = function(logger) {
     });
 
     ArchivedSubscriptionSchema.statics.archive = function(companyID, stockID, subscription) {
+        logger.info('Архивирую подписку на акцию ' + stockID + ' пользователя ' + subscription.id);
         this.create({
             archivedDate:     new Date(),
             subscriptionDate: subscription.date,
@@ -30,12 +31,19 @@ module.exports = function(logger) {
     };
 
     ArchivedSubscriptionSchema.statics.lookPreviousSubscriptions = function(userID, stockID, callback) {
+        logger.info('Ищу предыдущие подписки');
         this.find({userID: userID, stockID: stockID}, (err, archievedSubscriptions) => {
             if (err) return callback(err);
             callback(null, archievedSubscriptions);
         });
     };
 
-    mongoose.model('ArchievedSubcription', ArchivedSubscriptionSchema);
+    ArchivedSubscriptionSchema.statics.newest = function(subscriptions) {
+        return subscriptions.sort(function(a, b) {
+           return b.archivedDate - a.archivedDate
+        })[0];
+    };
+
+    mongoose.model('ArchivedSubscription', ArchivedSubscriptionSchema);
     logger.info('Подключил модель архивированной подписки');
 };

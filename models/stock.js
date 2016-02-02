@@ -18,7 +18,8 @@ module.exports = function (logger) {
         subscribes: [{
             id: String,
             date: Date,
-            code: String
+            code: String,
+            numberOfUses: Number
         }],
         startDate: Date,
         endDate: Date
@@ -32,27 +33,54 @@ module.exports = function (logger) {
         return {
             id: userID,
             date: new Date(),
-            code: code
+            code: code,
+            numberOfUses: 0
         }
     };
 
     StockSchema.methods.addSubscriber = function (id, callback) {
+        var ArchivedSubscription = mongoose.model('ArchivedSubscription');
+
         if (this.isSubscribed(id)) {
             callback(new JSONError('error', 'Вы уже подписаны на эту акцию!'));
         } else {
-            this.subscribes.push(this.constructor.generateSubscribition(id));
-            this.save();
-            callback(null);
+            ArchivedSubscription.lookPreviousSubscriptions(id, this._id, (err, archievedSubscriptions) => {
+                if (err) return callback(err);
+
+                if (archievedSubscriptions.length == 0) {
+                    logger.info('Предыдущих подписок не найдено. Создаю новую');
+                    this.subscribes.push(this.constructor.generateSubscribition(id));
+                    this.save();
+                    callback(null);
+                } else {
+                    logger.info('Найдены предыдущие подписки. Восстанавливаю из архива данные');
+                    var newestSubscription = ArchivedSubscription.newest(archievedSubscriptions);
+
+                    var subscription = {
+                        id: id,
+                        date: new Date(),
+                        numberOfUses: newestSubscription.numberOfUses,
+                        code: newestSubscription.code
+                    };
+
+                    this.subscribes.push(subscription);
+                    this.save();
+                    callback(null);
+                }
+            });
         }
     };
 
     StockSchema.methods.removeSubscriber = function (userID, callback) {
         var pos = this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID);
+        var ArchivedSubscription = mongoose.model('ArchivedSubscription');
 
         if (pos == -1) {
             callback(new JSONError('error', 'Юзер не подписан на эту акцию'));
             return;
         }
+
+        ArchivedSubscription.archive(this.company, this._id, this.subscribes[pos]);
 
         this.subscribes.splice(pos, 1);
         logger.info('Удаляю подписчика от акции ' + this._id);
