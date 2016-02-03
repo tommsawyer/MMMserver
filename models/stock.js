@@ -338,7 +338,6 @@ module.exports = function (logger) {
                     logo: self.logo,
                     thumb: self.thumb,
                     company: company,
-                    subscribes: self.subscribes.map((subscr) => {return subscr.id}),
                     startDate: self.startDate,
                     endDate: self.endDate
                 };
@@ -346,9 +345,12 @@ module.exports = function (logger) {
                 if (userID != undefined && userID != null) {
                     var subscribed = self.isSubscribed(userID);
                     answer['subscribed'] = subscribed;
+                    answer['subscribes'] = self.subscribes.map((subscr) => {return subscr.id});
                     if (subscribed) {
                         answer['code'] = self.getSubscribitionCode(userID);
                     }
+                } else {
+                   answer['subscribes'] = self.subscribes;
                 }
 
                 resolve(answer);
