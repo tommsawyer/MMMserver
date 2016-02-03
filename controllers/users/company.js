@@ -86,7 +86,7 @@ router.get('/activate', (req, res, next) => {
             return next(err);
         }
 
-        res.redirect("http://shappy-ru.1gb.ru/html/verify.html?token=" + company.getToken());
+        res.redirect("http://fast-anchorage-39702.herokuapp.com/verify?token=" + company.getToken());
     });
 });
 
