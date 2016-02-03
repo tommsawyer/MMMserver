@@ -338,12 +338,12 @@ module.exports = function (logger) {
                     logo: self.logo,
                     thumb: self.thumb,
                     company: company,
-                    subscribes: self.subscribes,
+                    subscribes: self.subscribes.map((subscr) => {return subscr.id}),
                     startDate: self.startDate,
                     endDate: self.endDate
                 };
 
-                if (userID != undefined) {
+                if (userID != undefined && userID != null) {
                     var subscribed = self.isSubscribed(userID);
                     answer['subscribed'] = subscribed;
                     if (subscribed) {
