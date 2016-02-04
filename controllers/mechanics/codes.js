@@ -11,6 +11,9 @@ router.get('/check', mw.requireCompanyAuth, (req, res, next) => {
     Stock.bySubscriptionCode(code, (err, stock) => {
         if (err) return next(err);
 
+        if (!stock.checkOwner(req.company._id))
+            return next(new JSONError('error', 'Вы не имеете права просматривать информацию об этой подписке', 403));
+
         stock.getUserByCode(code, (err, clientJSON) => {
             if (err) return next(err);
 
@@ -28,6 +31,9 @@ router.post('/apply', mw.requireCompanyAuth, (req, res, next) => {
     var code = req.body.code;
     Stock.bySubscriptionCode(code, (err, stock) => {
         if (err) return next(err);
+
+        if (!stock.checkOwner(req.company._id))
+            return next(new JSONError('error', 'Вы не имеете права активировать эту подписку', 403));
 
         if (stock.incrementNumberOfUses(code)) {
             res.JSONAnswer('apply', 'success');
