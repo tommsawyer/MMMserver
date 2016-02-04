@@ -1,34 +1,42 @@
-var express   = require('express');
-var mongoose  = require('mongoose');
-var mw        = require('../../utils/middlewares.js');
-var ObjectID  = require('mongodb').ObjectID;
-var filter    = require('../mechanics/filter.js');
-var codes     = require('../mechanics/codes.js');
-var Stock     = mongoose.model('Stock');
-var router    = express.Router();
-var JSONError = require('../../lib/json_error');
+var express    = require('express');
+var mongoose   = require('mongoose');
+var mw         = require('../../utils/middlewares.js');
+var ObjectID   = require('mongodb').ObjectID;
+var filter     = require('../mechanics/filter.js');
+var codes      = require('../mechanics/codes.js');
+var dateHelper = require('../../utils/dateHelper.js');
+var Stock      = mongoose.model('Stock');
+var router     = express.Router();
+var JSONError  = require('../../lib/json_error');
+
 
 router.use('/filter', filter);
 router.use('/codes',  codes);
 
 router.post('/create', mw.requireCompanyAuth, (req, res, next) => {
-    if (!req.file) {
-        req.logger.warn('Запрос создания акции без логотипа');
-    }
+    var categoryID  = null;
+    var startDate   = dateHelper.tryParseDate(req.body.startDate);
+    var endDate     = dateHelper.tryParseDate(req.body.endDate);
 
-    var categoryID = null;
+    if (!req.file) {
+        return next(new JSONError('error', 'У акции не указан логотип!'));
+    }
 
     try {
         categoryID = new ObjectID(req.body.category);
     } catch (e) {}
+
+
+    if (!dateHelper.checkDates(startDate, endDate))
+        return next(new JSONError('error', 'Даты проведения акции указаны некорректно'));
 
     var stock = new Stock({
         name: req.body.name,
         category: categoryID,
         description: req.body.description,
         company: req.company._id,
-        startDate: new Date(req.body.startDate),
-        endDate: new Date(req.body.endDate)
+        startDate: startDate,
+        endDate: endDate
     });
 
     stock.addLogo(req.file);
@@ -61,9 +69,17 @@ router.post('/edit', mw.requireCompanyAuth, (req, res, next) => {
         if (!req.file) {
             req.logger.warn('Запрос редактирования акции без логотипа');
 
+            var startDate = dateHelper.tryParseDate(req.body.startDate);
+            var endDate = dateHelper.tryParseDate(req.body.endDate);
+
+            if (!dateHelper.checkDates(startDate, endDate))
+                return next(new JSONError('error', 'Даты проведения акции указаны некорректно'));
+
             stock.name = req.body.name;
             stock.description = req.body.description;
-            stock.endDate = new Date(req.body.endDate);
+            stock.startDate =
+            stock.endDate = dateHelper.tryParseDate(req.body.endDate);
+
 
             stock.save((err) => {
                 if (err) {
