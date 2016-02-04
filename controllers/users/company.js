@@ -68,13 +68,36 @@ router.post('/authorize', (req, res, next) => {
 
         if (!company.active) {
             req.logger.info('Компания не активирована ' + req.body.login);
-            return next(new JSONError('error', 'Е-мейл не активирован'));
+            return next(new JSONError('unactivated', company._id.toString(), 403));
         }
 
         var token = company.getToken();
 
         req.logger.info('Авторизовалась компания ' + req.body.login);
         res.JSONAnswer('token', token);
+    });
+});
+
+router.post('/resend', (req, res, next) => {
+    try {
+        var companyID = new ObjectID(req.body.id);
+    } catch (e) {
+        return next(new JSONError('error', 'Нет такой компании', 404));
+    }
+
+    Company.findOne({_id: companyID}, (err, company) => {
+        if (err) return next(err);
+
+        if (!company)
+            return next(new JSONError('error', 'Нет такой компании', 404));
+
+        if (!company.active) {
+            mail.sendActivationEmail(company.email, company.activationHash);
+            res.JSONAnswer('resend', 'success');
+        } else {
+            return next(new JSONError('error', 'Эта компания уже активирована'));
+        }
+
     });
 });
 
