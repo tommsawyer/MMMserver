@@ -186,9 +186,20 @@ module.exports = function (logger) {
             }
         }
 
-        if (Object.keys(query.$or).length == 0) return callback(new JSONError('filter', 'Не заполнены поля', 400));
-
         logger.inspect('Поисковые параметры: ', query);
+
+        if (Object.keys(query.$or).length == 0) {
+            this.find({}, (err, clients) => {
+                if (err) return callback(err);
+
+                if (clients.length == 0) return callback(null, []);
+
+                callback(null, clients.map((client) => {
+                    return client.toJSON();
+                }));
+            });
+            return;
+        }
 
         this.find(query, (err, clients) => {
             if (err) return callback(err);
