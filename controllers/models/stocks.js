@@ -3,11 +3,13 @@ var mongoose  = require('mongoose');
 var mw        = require('../../utils/middlewares.js');
 var ObjectID  = require('mongodb').ObjectID;
 var filter    = require('../mechanics/filter.js');
+var codes     = require('../mechanics/codes.js');
 var Stock     = mongoose.model('Stock');
 var router    = express.Router();
 var JSONError = require('../../lib/json_error');
 
 router.use('/filter', filter);
+router.use('/codes',  codes);
 
 router.post('/create', mw.requireCompanyAuth, (req, res, next) => {
     if (!req.file) {
@@ -148,27 +150,6 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
 
             req.user.unsubscribe(stock._id);
             res.JSONAnswer('unsubscribestock', 'success');
-        });
-    });
-});
-
-router.post('/apply', mw.requireCompanyAuth, (req, res, next) => {
-    var code = req.body.code;
-
-    Stock.bySubscriptionCode(code, (err, stock) => {
-        if (err) return next(err);
-
-        stock.incrementNumberOfUses(code);
-
-        stock.getUserByCode(code, (err, clientJSON) => {
-            if (err) return next(err);
-
-            stock.toJSON().then((stockJSON) => {
-               res.JSONAnswer('apply', {
-                   user: clientJSON,
-                   stock: stockJSON
-               });
-            });
         });
     });
 });
