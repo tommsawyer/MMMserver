@@ -39,7 +39,7 @@ router.post('/create', mw.requireCompanyAuth, (req, res, next) => {
         endDate: endDate
     });
 
-    stock.addLogo(req.file);
+    stock.createImages(req.file);
 
     stock.save((err, stock) => {
         if (err) {
@@ -94,7 +94,7 @@ router.post('/edit', mw.requireCompanyAuth, (req, res, next) => {
                     return next(err);
                 }
 
-                stock.addLogo(req.file);
+                stock.createImages(req.file);
 
                 stock.name = req.body.name;
                 stock.description = req.body.description;

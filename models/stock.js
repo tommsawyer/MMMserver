@@ -6,8 +6,6 @@ module.exports = function (logger) {
     var JSONError = require('../lib/json_error');
     var Schema    = mongoose.Schema;
 
-    const THUMBNAIL_WIDTH = 480;
-
     var StockSchema = new Schema({
         name: String,
         description: String,
@@ -130,20 +128,34 @@ module.exports = function (logger) {
 
     /* Изображения */
 
-    StockSchema.methods.addLogo = function (file) {
+    StockSchema.methods.createImages = function (file) {
         if (!file) {
             this.logo = '';
             this.thumb = '';
             return;
         }
 
+        this.logo = '/stocks/' + file.filename;
+        this.thumb = '/stocks/' + file.filename.split('.')[0] + '_thumb.' + file.filename.split('.')[1];
+
+        this.createThumbnail(file.filename);
+    };
+
+    StockSchema.methods.createThumbnail = function (pathToImage) {
+        const THUMBNAIL_WIDTH = 480;
+
         var self = this;
-        self.logo = '/stocks/' + file.filename;
-        self.thumb = '/stocks/' + file.filename.split('.')[0] + '_thumb.' + file.filename.split('.')[1];
+        var dividedFileName = pathToImage.split('.');
+        var fileName        = dividedFileName[0];
+        var fileExtension   = dividedFileName[1];
 
-        var thumbnailFilename = __dirname + '/../public/stocks/' + file.filename.split('.')[0] + '_thumb.' + file.filename.split('.')[1];
+        var thumbnailFilename = __dirname +
+            '/../public/stocks/' +
+            fileName +
+            '_thumb.' +
+            fileExtension;
 
-        gm(__dirname + '/../public/stocks/' + file.filename)
+        gm(__dirname + '/../public/stocks/' + pathToImage)
             .resize(THUMBNAIL_WIDTH)
             .write(thumbnailFilename, function (err) {
                 if (err) {

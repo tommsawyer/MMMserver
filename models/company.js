@@ -36,7 +36,7 @@ module.exports = function (logger) {
         return company;
     };
 
-    CompanySchema.methods.addLogo = function(filename){
+    CompanySchema.methods.createImages = function(filename){
         if (!filename) {
             return;
         }
