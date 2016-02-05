@@ -74,7 +74,7 @@ module.exports = function (logger) {
     };
 
     ClientSchema.methods.unsubscribe = function (id) {
-        var stockPosition = this.stocks.indexOf(id);
+        var stockPosition = this.stocks.indexOf(id.toString());
 
         if (stockPosition == -1) {
             return false;

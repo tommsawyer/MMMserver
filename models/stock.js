@@ -120,7 +120,7 @@ module.exports = function (logger) {
     };
 
     StockSchema.methods.removeSubscriber = function (userID, callback) {
-        var pos = this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID);
+        var pos = this.getSubscribersIDs().indexOf(userID.toString());
         var ArchivedSubscription = mongoose.model('ArchivedSubscription');
 
         if (pos == -1) {
