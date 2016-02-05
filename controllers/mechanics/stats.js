@@ -8,7 +8,7 @@ var JSONError = require('../../lib/json_error');
 var ObjectID = require('mongodb').ObjectId;
 
 router.get('/stocksperdate', mw.requireCompanyAuth, (req, res, next) => {
-    Stock.byCompanyID(req.company._id, null, (err, stocks) => {
+    Stock.byCompanyID(req.company._id, (err, stocks) => {
         if (err) {
             return next(err);
         }
@@ -19,9 +19,9 @@ router.get('/stocksperdate', mw.requireCompanyAuth, (req, res, next) => {
 
         var dates = {};
 
-        stocks.forEach((stock) => {
+        Stock.arrayToJSON(stocks).forEach((stock) => {
             stock.subscribes.forEach((subscr) => {
-                var date = subscr.date == undefined ? "no date" : subscr.date.toDateString();
+                var date = subscr.date.toDateString();
                 dates[date] = dates[date] + 1 || 1;
             });
         });
@@ -44,7 +44,7 @@ router.get('/usersperstock', mw.requireCompanyAuth, (req, res, next) => {
         var dates = {};
 
         stock.subscribes.forEach((subscr) => {
-            var date = subscr.date == undefined ? "no date" : subscr.date.toDateString();
+            var date = subscr.date.toDateString();
             dates[date] = dates[date] + 1 || 1;
         });
 
@@ -53,7 +53,7 @@ router.get('/usersperstock', mw.requireCompanyAuth, (req, res, next) => {
 });
 
 router.get('/countperstock', mw.requireCompanyAuth, (req, res, next) => {
-    Stock.byCompanyID(req.company._id, null, (err, stocks) => {
+    Stock.byCompanyID(req.company._id, (err, stocks) => {
         if (err) return next(err);
 
         if (stocks.length == 0) {
@@ -62,7 +62,7 @@ router.get('/countperstock', mw.requireCompanyAuth, (req, res, next) => {
 
         var data = {};
 
-        stocks.forEach((stock) => {
+        Stock.arrayToJSON(stocks).forEach((stock) => {
            data[stock.name] = stock.subscribes.length;
         });
 

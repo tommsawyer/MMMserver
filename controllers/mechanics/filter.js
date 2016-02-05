@@ -15,25 +15,25 @@ router.get('/', mw.requireClientAuth, (req, res, next) => {
         category  : req.category
     };
 
-    Stock.byQuery(query, req.user._id.toString(), (err, stocks) => {
+    Stock.byQuery(query, (err, stocks) => {
         if (err) {
             return next(err);
         }
 
         req.logger.info('Отправляю клиенту найденные акции');
-        res.JSONAnswer('stocks', stocks);
+        res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
     });
 
 });
 
 router.get('/company', mw.requireClientAuth, (req, res, next) => {
-    Stock.byCompanyID(req.query.companyID, req.user._id.toString(), (err, stocks) => {
+    Stock.byCompanyID(req.query.companyID, (err, stocks) => {
         if (err) {
             return next(err);
         }
 
         req.logger.info('У компании ' + req.query.companyID + ' ' + stocks.length + ' акций. Отправляю клиенту');
-        res.JSONAnswer('stocks', stocks);
+        res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
     });
 });
 
@@ -49,14 +49,12 @@ router.get('/category', mw.requireClientAuth, (req, res, next) => {
 
         if (!category) return next(new JSONError('error', 'Нет такой категории', 404));
 
-        Stock.find({category: CategoryID}, (err, stocks) => {
+        Stock.findAndPopulate({category: CategoryID},(err, stocks) => {
             if (err) return next(err);
 
             if (stocks.length == 0) return res.JSONAnswer('stocks', []);
 
-            Stock.arrayToJSON(req.user._id.toString(), stocks, (stocksJSON) => {
-                res.JSONAnswer('stocks', stocksJSON);
-            });
+            res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
         });
     });
 
@@ -65,21 +63,21 @@ router.get('/category', mw.requireClientAuth, (req, res, next) => {
 router.get('/search', mw.requireClientAuth, (req, res, next) => {
     var searchWord = req.query.searchword;
 
-    Stock.bySearchWord(searchWord, req.user._id.toString(), (err, stocks) => {
+    Stock.bySearchWord(searchWord, (err, stocks) => {
         if (err) {
             return next(err);
         }
 
         req.logger.info('Поиск по запросу ' + searchWord + ' нашел ' + stocks.length + ' акций');
-        res.JSONAnswer('stocks', stocks);
+        res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
     });
 });
 
 router.get('/subscribitions', mw.requireClientAuth, (req, res, next) => {
-    Stock.byUserFilter(req.user._id.toString(), req.user.filters, (err, stocks) => {
+    Stock.byUserFilter(req.user.filters, (err, stocks) => {
         if (err) return next(err);
 
-        res.JSONAnswer('subscribitions', stocks);
+        res.JSONAnswer('subscribitions', Stock.arrayToJSON(stocks, req.user._id));
     });
 });
 
@@ -107,7 +105,7 @@ router.get('/friends', mw.requireClientAuth, (req, res, next) => {
             stocksID = stocksID.map((stock) => {return new ObjectID(stock)});
         }
 
-        Stock.find({_id: {$in: stocksID}}, (err, stocks) => {
+        Stock.findAndPopulate({_id: {$in: stocksID}}, (err, stocks) => {
             if (err) {
                 return next(err);
             }
@@ -116,9 +114,7 @@ router.get('/friends', mw.requireClientAuth, (req, res, next) => {
                 return res.JSONAnswer('friendsfeed', []);
             }
 
-            Stock.arrayToJSON(req.client._id, stocks, (stocksJSON) => {
-                res.JSONAnswer('friendsfeed', stocksJSON);
-            });
+            res.JSONAnswer('friendsfeed', Stock.arrayToJSON(stocks, req.user._id));
         });
     });
 });

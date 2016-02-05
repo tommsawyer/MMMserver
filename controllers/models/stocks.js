@@ -51,10 +51,19 @@ router.post('/create', mw.requireCompanyAuth, (req, res, next) => {
 });
 
 router.post('/edit', mw.requireCompanyAuth, (req, res, next) => {
+    var startDate = dateHelper.tryParseDate(req.body.startDate);
+    var endDate   = dateHelper.tryParseDate(req.body.endDate);
+
+    if (!dateHelper.checkDates(startDate, endDate))
+        return next(new JSONError('error', 'Даты проведения акции указаны некорректно'));
+
+    try {
+        var categoryID = new ObjectID(req.body.category);
+    } catch (e) {}
+
+
     Stock.findOne({'_id' : new ObjectID(req.body.id)}, (err, stock) => {
-        if (err) {
-            return next(err);
-        }
+        if (err) return next(err);
 
         if (!stock) {
             req.logger.warn('Нет акции с айди ' + req.body.id);
@@ -66,45 +75,30 @@ router.post('/edit', mw.requireCompanyAuth, (req, res, next) => {
             return next(new JSONError('error', 'Вы не можете редактировать эту акцию'));
         }
 
+        if (categoryID) {
+            stock.category = categoryID;
+        }
+
+        stock.name = req.body.name;
+        stock.description = req.body.description;
+        stock.startDate = startDate;
+        stock.endDate = endDate;
+
         if (!req.file) {
             req.logger.warn('Запрос редактирования акции без логотипа');
 
-            var startDate = dateHelper.tryParseDate(req.body.startDate);
-            var endDate = dateHelper.tryParseDate(req.body.endDate);
-
-            if (!dateHelper.checkDates(startDate, endDate))
-                return next(new JSONError('error', 'Даты проведения акции указаны некорректно'));
-
-            stock.name = req.body.name;
-            stock.description = req.body.description;
-            stock.startDate =
-            stock.endDate = dateHelper.tryParseDate(req.body.endDate);
-
-
             stock.save((err) => {
-                if (err) {
-                    return next(err);
-                }
-
+                if (err) return next(err);
                 res.JSONAnswer('stock', stock.logo);
             });
         } else {
             stock.removeImages((err) => {
-                if (err) {
-                    return next(err);
-                }
+                if (err) return next(err);
 
                 stock.createImages(req.file);
 
-                stock.name = req.body.name;
-                stock.description = req.body.description;
-                stock.startDate = new Date(req.body.startDate);
-                stock.endDate = new Date(req.body.endDate);
-
                 stock.save((err) => {
-                    if (err) {
-                        return next(err);
-                    }
+                    if (err) return next(err);
                     res.JSONAnswer('stock', stock.logo);
                 });
             });
@@ -178,14 +172,12 @@ router.get('/info', mw.requireAnyAuth, (req, res, next) => {
     }
 
 
-    Stock.findOne({_id: stockID}, (err, stock) => {
+    Stock.findOneAndPopulate({_id: stockID}, (err, stock) => {
         if (err) return next(err);
 
         if (!stock) return next(new JSONError('stockinfo', 'Нет такой акции', 404));
 
-        stock.toJSON(req.user ? req.user._id : undefined).then((stockJSON) => {
-            res.JSONAnswer('stockinfo', stockJSON);
-        });
+        res.JSONAnswer('stockinfo', stock.toJSON(req.user ? req.user._id : undefined));
     });
 });
 
@@ -200,19 +192,24 @@ router.get('/feed', mw.requireClientAuth, (req, res, next) => {
 });
 
 router.get('/all', mw.requireClientAuth, (req, res, next) => {
-    Stock.allToJSON(req.user._id.toString(), function (stocks) {
-        res.JSONAnswer('stock', stocks);
+    Stock.findAndPopulate({}, (err, stocks) => {
+        if (err) return next(err);
+
+        if (stocks.length == 0)
+            res.JSONAnswer('stock', []);
+
+        res.JSONAnswer('stock', Stock.arrayToJSON(stocks, req.user._id));
     });
 });
 
 router.get('/me', mw.requireCompanyAuth, (req, res, next) => {
-    Stock.byCompanyID(req.company._id, undefined,  (err, stocks) => {
+    Stock.byCompanyID(req.company._id, (err, stocks) => {
         if (err) {
             return next(err);
         }
 
         req.logger.info('Отправляю клиенту акции компании ' + req.company.login);
-        res.JSONAnswer('stocks', stocks);
+        res.JSONAnswer('stocks', Stock.arrayToJSON(stocks));
     });
 });
 

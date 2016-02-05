@@ -26,21 +26,18 @@ module.exports = function (logger) {
         });
         var self = this;
 
-
         if (subscribitions.length == 0) {
             callback(null, []);
             return;
         }
 
-        Stock.find({_id: {$in: subscribitions}}, (err, stocks) => {
+        Stock.findAndPopulate({_id: {$in: subscribitions}}, (err, stocks) => {
             if (err) {
                 callback(err);
                 return;
             }
 
-            Stock.arrayToJSON(self._id.toString(), stocks, (stocksJSON) => {
-                callback(null, stocksJSON);
-            });
+            callback(null, Stock.arrayToJSON(stocks, self._id));
         });
     };
 

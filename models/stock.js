@@ -9,23 +9,30 @@ module.exports = function (logger) {
     var StockSchema = new Schema({
         name: String,
         description: String,
-        company: String,
-        category: Schema.Types.ObjectId,
         logo: String,
         thumb: String,
+        startDate: Date,
+        endDate: Date,
+        company: {
+            type: Schema.Types.ObjectId,
+            ref: 'Company'
+        },
+        category: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category'
+        },
         subscribes: [{
-            id: String,
+            id: Schema.Types.ObjectId,
             date: Date,
             code: String,
             numberOfUses: Number
-        }],
-        startDate: Date,
-        endDate: Date
+        }]
     });
 
     /* Подписки */
 
-    StockSchema.statics.generateSubscribition = function(userID) {
+
+    StockSchema.statics.generateSubscription = function(userID) {
         var code = Math.round(Math.random() * Math.pow(10, 10)).toString();
         logger.info('Сгенерировал код подписки на акцию: ' + code);
         return {
@@ -34,6 +41,23 @@ module.exports = function (logger) {
             code: code,
             numberOfUses: 0
         }
+    };
+
+    StockSchema.methods.getSubscribersIDs = function() {
+        return this.subscribes.map( (subscr) => {return subscr.id});
+    };
+
+    StockSchema.methods.getSubscriptionDates = function() {
+        return this.subscribes.map((subscr) => {return subscr.date});
+    };
+
+    StockSchema.methods.getSubscriptionCode = function(userID) {
+        var pos = this.getSubscribersIDs()
+            .map((id) => {return id.toString()})
+            .indexOf(userID.toString());
+
+        if (pos == -1) return null;
+        return this.subscribes[pos].code;
     };
 
     StockSchema.methods.addSubscriber = function (id, callback) {
@@ -47,7 +71,7 @@ module.exports = function (logger) {
 
                 if (archievedSubscriptions.length == 0) {
                     logger.info('Предыдущих подписок не найдено. Создаю новую');
-                    this.subscribes.push(this.constructor.generateSubscribition(id));
+                    this.subscribes.push(this.constructor.generateSubscription(id));
                     this.save();
                     callback(null);
                 } else {
@@ -113,17 +137,7 @@ module.exports = function (logger) {
     };
 
     StockSchema.methods.isSubscribed = function (userID) {
-        return this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID) != -1;
-    };
-
-    StockSchema.methods.getSubscribitionsDates = function() {
-        return this.subscribes.map((subscr) => {return subscr.date});
-    };
-
-    StockSchema.methods.getSubscribitionCode = function(userID) {
-        var pos = this.subscribes.map((subscr) => {return subscr.id}).indexOf(userID);
-        if (pos == -1) return null;
-        return this.subscribes[pos].code;
+        return this.subscribes.map((subscr) => {return subscr.id.toString()}).indexOf(userID.toString()) != -1;
     };
 
     /* Изображения */
@@ -204,7 +218,7 @@ module.exports = function (logger) {
             }
         };
 
-        this.findOne(query, (err, stock) => {
+        this.findOneAndPopulate(query, (err, stock) => {
             if (err) return callback(err);
             if (!stock) return callback(new JSONError('error', 'Не найдено акции с таким активационным кодом', 404));
 
@@ -212,67 +226,33 @@ module.exports = function (logger) {
         });
     };
 
-    StockSchema.statics.byUserFilter = function(userID, filter, callback) {
+    StockSchema.statics.byUserFilter = function(filter, callback) {
         var Stock = mongoose.model('Stock');
 
         var query = {
             $or: [
-                {company:  {$in: filter.companies.map((comp) => {return comp.toString()}) }},
+                {company:  {$in: filter.companies }},
                 {category: {$in: filter.categories}}
             ]
         };
 
-        this.find(query, (err, stocks) => {
-            if (err) return callback(err);
-            if (stocks.length == 0) return callback(null, []);
-
-            Stock.arrayToJSON(userID, stocks, (stocksJSON) => {
-               callback(null, stocksJSON);
-            });
-        });
+        this.findAndPopulate(query, callback);
     };
 
-    StockSchema.statics.bySearchWord = function (word, userID, callback) {
+    StockSchema.statics.bySearchWord = function (word, callback) {
         var searchRegExp = new RegExp('.*' + word + '.*', 'i');
-        this.find({
+        var query = {
             $or: [
                 {'name': {$regex: searchRegExp}},
                 {'description': {$regex: searchRegExp}}
             ]
-        }, (err, stocks) => {
-            if (err) {
-                callback(err);
-                return;
-            }
+        };
 
-            if (stocks.length == 0) {
-                callback(null, []);
-                return;
-            }
-
-            this.arrayToJSON(userID, stocks, (stocksJSON) => {
-                callback(null, stocksJSON);
-            });
-        });
-
+        this.findAndPopulate(query, callback);
     };
 
-    StockSchema.statics.byCompanyID = function (companyID, userID, callback) {
-        this.find({'company': companyID}, (err, stocks) => {
-            if (err) {
-                callback(err);
-            }
-
-            if (stocks.length == 0) {
-                logger.info('У компании ' + companyID + ' нет акций');
-                callback(null, []);
-                return;
-            }
-
-            this.arrayToJSON(userID, stocks, (stocksJSON) => {
-                callback(null, stocksJSON);
-            });
-        });
+    StockSchema.statics.byCompanyID = function (companyID, callback) {
+        this.findAndPopulate({'company': companyID}, callback);
     };
 
     StockSchema.statics.constructQuery = function (query) {
@@ -306,100 +286,62 @@ module.exports = function (logger) {
         return resultQuery;
     };
 
-    StockSchema.statics.byQuery = function (query, userID, callback) {
-        this.find(this.constructQuery(query), (err, stocks) => {
-            if (err) {
-                callback(err);
-                return;
-            }
+    StockSchema.statics.byQuery = function (query, callback) {
+        this.findAndPopulate(this.constructQuery(query), callback);
+    };
 
-            if (stocks.length == 0) {
-                callback(null, []);
-                return;
-            }
+    StockSchema.statics.findOneAndPopulate = function (query, callback) {
+        this
+            .findOne(query)
+            .populate('company')
+            .populate('category', 'id name')
+            .exec(callback);
+    };
 
-            this.arrayToJSON(userID, stocks, (result) => {
-                callback(null, result);
-            });
-        });
+    StockSchema.statics.findAndPopulate = function (query, callback) {
+        this
+            .find(query)
+            .populate('company')
+            .populate('category', 'id name')
+            .exec(callback);
     };
 
     /*  Преобразование в JSON  */
 
     StockSchema.methods.toJSON = function (userID) {
-        var self = this;
-        return new Promise(function (resolve) {
-            var Company = mongoose.model('Company');
-            Company.findOne({'_id': new ObjectID(self.company)}, (err, company) => {
-                if (err) {
-                    logger.error(err);
-                    throw err;
-                }
+        var stockJSON = {
+            id: this._id,
+            name: this.name,
+            description: this.description,
+            logo: this.logo,
+            thumb: this.thumb,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            company: this.company,
+            category: this.category,
+            subscribes: this.subscribes
+        };
 
-                if (!company) {
-                    logger.warn('У акции с айди ' + self.id + ' не указана компания или некорректный айди(id = ' + self.company + ')');
-                    company = '';
-                } else {
-                    company = company.toJSON();
-                }
+        if (userID) {
+            var subscribed = this.isSubscribed(userID);
+            stockJSON.subscribed = subscribed;
+            stockJSON.subscribes = this.getSubscribersIDs();
 
-                var answer = {
-                    name: self.name,
-                    description: self.description,
-                    id: self._id,
-                    logo: self.logo,
-                    thumb: self.thumb,
-                    company: company,
-                    startDate: self.startDate,
-                    endDate: self.endDate
-                };
+            if (subscribed)
+                stockJSON.code = this.getSubscriptionCode(userID);
+        }
 
-                if (userID != undefined && userID != null) {
-                    var subscribed = self.isSubscribed(userID);
-                    answer['subscribed'] = subscribed;
-                    answer['subscribes'] = self.subscribes.map((subscr) => {return subscr.id});
-                    if (subscribed) {
-                        answer['code'] = self.getSubscribitionCode(userID);
-                    }
-                } else {
-                   answer['subscribes'] = self.subscribes;
-                }
-
-                resolve(answer);
-            });
-        });
+        return stockJSON;
     };
 
-    StockSchema.statics.allToJSON = function (userID, callback) {
-        this.find({}, (err, stocks) => {
-            if (err) {
-                logger.error(err);
-                throw err;
-            }
-
-            this.arrayToJSON(userID, stocks, (stocksJSON) => {
-                callback(stocksJSON);
-            });
-        });
-    };
-
-    StockSchema.statics.arrayToJSON = function (userID, stocks, callback) {
-        var promises = [];
-
-        stocks.forEach((stock) => {
-            promises.push(stock.toJSON(userID))
-        });
-
-        Promise.all(promises).then(function (stocks) {
-            callback(stocks);
-        });
-
+    StockSchema.statics.arrayToJSON = function(stocks, userID) {
+        return stocks.map((stock) => {return stock.toJSON(userID)});
     };
 
     /* Вспомогательные методы */
 
     StockSchema.methods.checkOwner = function (companyID) {
-        return this.company == companyID;
+        return this.company.toString() == companyID.toString();
     };
 
     StockSchema.methods.prepareRemove = function (callback) {
