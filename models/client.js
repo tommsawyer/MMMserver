@@ -159,14 +159,21 @@ module.exports = function (logger) {
         }
     };
 
+    ClientSchema.methods.isInFriends = function(id) {
+        return this.friends.indexOf(id) != -1;
+    };
+
     ClientSchema.methods.toJSON = function (){
-      return {
-          'FIO': this.FIO,
-          'mail': this.mail,
-          'phone': this.phone,
-          'friends': this.friends,
-          'login': this.login
-      }
+        var info = {
+            'id': this._id,
+            'FIO': this.FIO,
+            'mail': this.mail,
+            'phone': this.phone,
+            'friends': this.friends,
+            'login': this.login
+        };
+
+        return info;
     };
 
     ClientSchema.statics.byFilter = function(FIO, mail, phone, callback) {

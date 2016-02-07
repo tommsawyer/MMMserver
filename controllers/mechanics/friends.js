@@ -43,6 +43,12 @@ router.get('/filter', mw.requireClientAuth, (req, res, next) => {
     Client.byFilter(req.query.FIO, req.query.mail, req.query.phone, (err, users) => {
         if (err) return next(err);
 
+        for (var i = 0; i < users.length; i++) {
+            var userInfo = users[i];
+
+            userInfo['isFriend'] = req.user.isInFriends(userInfo['id']);
+        }
+
         res.JSONAnswer('friendsfilter', users);
     });
 });
