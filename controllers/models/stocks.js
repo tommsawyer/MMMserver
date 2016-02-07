@@ -176,6 +176,8 @@ router.get('/info', mw.requireAnyAuth, (req, res, next) => {
 
         if (!stock) return next(new JSONError('stockinfo', 'Нет такой акции', 404));
 
+        if (req.user) stock.incrementNumberOfViews();
+
         res.JSONAnswer('stockinfo', stock.toJSON(req.user ? req.user._id : undefined));
     });
 });

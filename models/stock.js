@@ -13,6 +13,7 @@ module.exports = function (logger) {
         thumb: String,
         startDate: Date,
         endDate: Date,
+        views: Number,
         company: {
             type: Schema.Types.ObjectId,
             ref: 'Company'
@@ -372,6 +373,12 @@ module.exports = function (logger) {
                 callback(null, 'ok');
             });
         });
+    };
+
+    StockSchema.methods.incrementNumberOfViews = function() {
+        this.views = this.views + 1 || 1;
+        logger.info('Увеличиваю счетчик просмотров у акции');
+        this.save();
     };
 
     StockSchema.pre('save', function (next) {
