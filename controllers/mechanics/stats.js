@@ -87,7 +87,8 @@ router.get('/stockinfo',     mw.requireCompanyAuth, (req, res, next) => {
             viewsInFeed: stock.viewsInFeed,
             views: stock.views,
             subscribes: stock.getSubscribesCount(),
-            uses: stock.getNumberOfUses()
+            uses: stock.getNumberOfUses(),
+            reuses: stock.getNumberOfReUses()
         };
 
         res.JSONAnswer('stockinfo', stockInfo);

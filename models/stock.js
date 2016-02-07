@@ -386,6 +386,12 @@ module.exports = function (logger) {
         return numberOfUses;
     };
 
+    StockSchema.methods.getNumberOfReUses = function() {
+       return this.subscribes.filter((subscribe) => {
+           return subscribe.numberOfUses > 1;
+       }).length
+    };
+
     StockSchema.methods.getSubscribesCount = function() {
         return this.subscribes.length;
     };
