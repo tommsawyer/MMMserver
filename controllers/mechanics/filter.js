@@ -20,6 +20,8 @@ router.get('/', mw.requireClientAuth, (req, res, next) => {
             return next(err);
         }
 
+        Stock.incrementFeedViewsInArray(stocks);
+
         req.logger.info('Отправляю клиенту найденные акции');
         res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
     });
@@ -31,6 +33,8 @@ router.get('/company', mw.requireClientAuth, (req, res, next) => {
         if (err) {
             return next(err);
         }
+
+        Stock.incrementFeedViewsInArray(stocks);
 
         req.logger.info('У компании ' + req.query.companyID + ' ' + stocks.length + ' акций. Отправляю клиенту');
         res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
@@ -52,6 +56,8 @@ router.get('/category', mw.requireClientAuth, (req, res, next) => {
         Stock.findAndPopulate({category: CategoryID},(err, stocks) => {
             if (err) return next(err);
 
+            Stock.incrementFeedViewsInArray(stocks);
+
             if (stocks.length == 0) return res.JSONAnswer('stocks', []);
 
             res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
@@ -68,6 +74,8 @@ router.get('/search', mw.requireClientAuth, (req, res, next) => {
             return next(err);
         }
 
+        Stock.incrementFeedViewsInArray(stocks);
+
         req.logger.info('Поиск по запросу ' + searchWord + ' нашел ' + stocks.length + ' акций');
         res.JSONAnswer('stocks', Stock.arrayToJSON(stocks, req.user._id));
     });
@@ -76,6 +84,8 @@ router.get('/search', mw.requireClientAuth, (req, res, next) => {
 router.get('/subscribitions', mw.requireClientAuth, (req, res, next) => {
     Stock.byUserFilter(req.user.filters, (err, stocks) => {
         if (err) return next(err);
+
+        Stock.incrementFeedViewsInArray(stocks);
 
         res.JSONAnswer('subscribitions', Stock.arrayToJSON(stocks, req.user._id));
     });
@@ -113,6 +123,8 @@ router.get('/friends', mw.requireClientAuth, (req, res, next) => {
             if (stocks.length == []) {
                 return res.JSONAnswer('friendsfeed', []);
             }
+
+            Stock.incrementFeedViewsInArray(stocks);
 
             res.JSONAnswer('friendsfeed', Stock.arrayToJSON(stocks, req.user._id));
         });
