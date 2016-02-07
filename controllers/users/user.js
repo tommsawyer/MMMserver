@@ -15,7 +15,14 @@ router.post('/register', mw.checkLoginAndPassword, (req, res, next) => {
             return res.JSONAnswer('error', 'Пользователь с таким логином уже существует');
         }
 
-        var cl = new Client(req.body);
+        var cl = new Client({
+            login: req.body.login,
+            password: req.body.password,
+            FIO: req.body.name + ' ' + req.body.surname,
+            mail: req.body.mail,
+            phone: req.body.phone
+        });
+
         cl.save((err, client) => {
             if (err) {
                 return next(err);

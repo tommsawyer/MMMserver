@@ -18,6 +18,19 @@ module.exports = function (logger) {
         stocks: [String]
     });
 
+    ClientSchema
+        .virtual('name')
+        .get(function() {
+            var fio = this.FIO || '';
+            return fio.split(' ')[0]
+        });
+
+    ClientSchema
+        .virtual('surname')
+        .get(function() {
+            var fio = this.FIO || '  ';
+            return fio.split(' ')[1]
+        });
 
     ClientSchema.methods.getSubscribitions = function (callback) {
         var Stock = mongoose.model('Stock');
@@ -166,7 +179,8 @@ module.exports = function (logger) {
     ClientSchema.methods.toJSON = function (){
         var info = {
             'id': this._id,
-            'FIO': this.FIO,
+            'name': this.name,
+            'surname': this.surname,
             'mail': this.mail,
             'phone': this.phone,
             'friends': this.friends,
