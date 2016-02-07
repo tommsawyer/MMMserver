@@ -70,4 +70,28 @@ router.get('/countperstock', mw.requireCompanyAuth, (req, res, next) => {
     });
 });
 
+router.get('/stockinfo',     mw.requireCompanyAuth, (req, res, next) => {
+    try {
+        var stockID = new ObjectID(req.query.id);
+    } catch (e) {
+        return next(new JSONError('error', 'Акции с таким айди не найдено', 404));
+    }
+
+    Stock.findOne({_id: stockID}, (err, stock) => {
+        if (err) return next(err);
+
+        if (!stock)
+            return next(new JSONError('error', 'Акции с таким айди не найдено', 404));
+
+        var stockInfo = {
+            viewsInFeed: stock.viewsInFeed,
+            views: stock.views,
+            subscribes: stock.getSubscribesCount(),
+            uses: stock.getNumberOfUses()
+        };
+
+        res.JSONAnswer('stockinfo', stockInfo);
+    });
+});
+
 module.exports = router;

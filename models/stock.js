@@ -376,6 +376,20 @@ module.exports = function (logger) {
         });
     };
 
+    StockSchema.methods.getNumberOfUses = function () {
+        var numberOfUses = 0;
+
+        this.subscribes.forEach((subscribe) => {
+           numberOfUses += subscribe.numberOfUses > 0 ? 1 : 0;
+        });
+
+        return numberOfUses;
+    };
+
+    StockSchema.methods.getSubscribesCount = function() {
+        return this.subscribes.length;
+    };
+
     StockSchema.methods.incrementNumberOfViews = function() {
         this.views = this.views + 1 || 1;
         logger.info('Увеличиваю счетчик просмотров у акции');
