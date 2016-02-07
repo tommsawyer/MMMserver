@@ -71,9 +71,10 @@ module.exports = function (logger) {
 
                 if (archievedSubscriptions.length == 0) {
                     logger.info('Предыдущих подписок не найдено. Создаю новую');
-                    this.subscribes.push(this.constructor.generateSubscription(id));
+                    var subscription = this.constructor.generateSubscription(id);
+                    this.subscribes.push(subscription);
                     this.save();
-                    callback(null);
+                    callback(null, subscription);
                 } else {
                     logger.info('Найдены предыдущие подписки. Восстанавливаю из архива данные');
                     var newestSubscription = ArchivedSubscription.newest(archievedSubscriptions);
@@ -87,7 +88,7 @@ module.exports = function (logger) {
 
                     this.subscribes.push(subscription);
                     this.save();
-                    callback(null);
+                    callback(null, subscription);
                 }
             });
         }
@@ -120,7 +121,9 @@ module.exports = function (logger) {
     };
 
     StockSchema.methods.removeSubscriber = function (userID, callback) {
-        var pos = this.getSubscribersIDs().indexOf(userID.toString());
+        var pos = this.getSubscribersIDs()
+            .map((id) => {return id.toString()})
+            .indexOf(userID.toString());
         var ArchivedSubscription = mongoose.model('ArchivedSubscription');
 
         if (pos == -1) {

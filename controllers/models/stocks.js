@@ -132,7 +132,7 @@ router.post('/remove', mw.requireCompanyAuth, (req, res, next) => {
 });
 
 router.post('/subscribe', mw.requireClientAuth, (req, res, next) => {
-    req.user.subscribe(req.body.id, (err, stock) => {
+    req.user.subscribe(req.body.id, (err, subscription) => {
         if (err) {
             return next(err);
         }
@@ -142,8 +142,7 @@ router.post('/subscribe', mw.requireClientAuth, (req, res, next) => {
                 return next(err);
             }
 
-            req.logger.info('Юзер ' + user.login + ' подписался на акцию ' + stock._id);
-            res.JSONAnswer('subscribeStock', 'OK');
+            res.JSONAnswer('subscribeStock', subscription.code);
         });
     });
 });

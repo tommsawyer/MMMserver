@@ -59,6 +59,7 @@ module.exports = function (logger) {
 
             var id = stock._id.toString();
             var subscribes = this.stocks;
+            var self = this;
 
             if (subscribes.indexOf(id) != -1) {
                 logger.warn('Попытка подписаться на акцию, которая уже в подписках. Айди ' + id);
@@ -68,8 +69,12 @@ module.exports = function (logger) {
 
             subscribes.push(id);
             this.stocks = subscribes;
-            stock.addSubscriber(this._id.toString(), (err) => {if (err) logger.error(err)});
-            callback(null, stock);
+
+            stock.addSubscriber(this._id.toString(), (err, subscription) => {
+                if (err) return callback(err);
+                logger.info('Юзер ' + self.login + ' подписался на акцию ' + id);
+                callback(null, subscription);
+            });
         });
     };
 
