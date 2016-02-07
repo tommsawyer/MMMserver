@@ -176,29 +176,38 @@ module.exports = function (logger) {
         return info;
     };
 
-    ClientSchema.statics.byFilter = function(FIO, mail, phone, callback) {
+    ClientSchema.statics.byFilter = function(userID, FIO, mail, phone, callback) {
         var fields = {
             'FIO': FIO,
             'mail': mail,
             'phone': phone
         };
 
+        var idNotEqualUserID = {
+            _id: {
+                $ne: userID.toString()
+            }
+        };
+
         var query = {
-            $or: []
+            $and: [
+                {$or: []},
+                idNotEqualUserID
+            ]
         };
 
         for (var name in fields) {
             if (fields[name]) {
               var obj = {};
               obj[name] = new RegExp('.*' + fields[name] + '.*', 'i');
-              query.$or.push(obj);
+              query.$and[0].$or.push(obj);
             }
         }
 
-        logger.inspect('Поисковые параметры: ', query);
+        logger.inspect('Поисковые параметры: ', fields);
 
-        if (Object.keys(query.$or).length == 0) {
-            this.find({}, (err, clients) => {
+        if (Object.keys(query.$and[0].$or).length == 0) {
+            this.find(idNotEqualUserID, (err, clients) => {
                 if (err) return callback(err);
 
                 if (clients.length == 0) return callback(null, []);
