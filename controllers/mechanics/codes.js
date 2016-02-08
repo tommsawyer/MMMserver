@@ -17,11 +17,9 @@ router.get('/check', mw.requireCompanyAuth, (req, res, next) => {
         stock.getUserByCode(code, (err, clientJSON) => {
             if (err) return next(err);
 
-            stock.toJSON().then((stockJSON) => {
-                res.JSONAnswer('check', {
-                    user: clientJSON,
-                    stock: stockJSON
-                });
+            res.JSONAnswer('check', {
+                user: clientJSON,
+                stock: stock.toJSON()
             });
         });
     });

@@ -113,7 +113,7 @@ module.exports = function (logger) {
 
         this.subscribes.forEach((subscr) => {
            if (subscr.code == code) {
-               Client.findOne({_id: new ObjectID(subscr.id)}, (err, client) => {
+               Client.findOne({_id: subscr.id}, (err, client) => {
                    if (err) return callback(err);
 
                    callback(null, client.toJSON());
@@ -346,7 +346,8 @@ module.exports = function (logger) {
     /* Вспомогательные методы */
 
     StockSchema.methods.checkOwner = function (companyID) {
-        return this.company.toString() == companyID.toString();
+        return (this.company.toString() == companyID.toString()) ||
+            (this.company._id == companyID.toString());
     };
 
     StockSchema.methods.prepareRemove = function (callback) {
