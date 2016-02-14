@@ -99,4 +99,15 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/filter/search', mw.requireClientAuth, (req, res, next) => {
+    req.logger.info('Ищу компании по запросу ' + req.query.searchword);
+    var searchRegExp = new RegExp('.*' + req.query.searchword + '.*', 'i');
+
+    Company.find({name: {$regex: searchRegExp}}, (err, companies) => {
+        if (err) return next(err);
+
+        res.JSONAnswer('companies', companies.map((comp) => comp.toJSON()));
+    });
+});
+
 module.exports = router;
