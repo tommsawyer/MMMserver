@@ -95,4 +95,26 @@ router.get('/stockinfo',     mw.requireCompanyAuth, (req, res, next) => {
     });
 });
 
+router.get('/numberofuses',  mw.requireCompanyAuth, (req, res, next) => {
+   Stock.byCompanyID(req.company._id, (err, stocks) => {
+       if (err) return next(err);
+
+       if (stocks.length == 0) {
+           return res.JSONAnswer('numberofuses', {});
+       }
+
+       var datesAndUses = {};
+
+       stocks.forEach((stock) => {
+           stock.subscribes.forEach((subscribe) => {
+               var subscribeDay = subscribe.date.toDateString();
+               var numberOfUses = subscribe.numberOfUses || 0;
+
+               datesAndUses[subscribeDay] = datesAndUses[subscribeDay] + numberOfUses || numberOfUses;
+           });
+       });
+
+       res.JSONAnswer('numberofuses', datesAndUses);
+   });
+});
 module.exports = router;
