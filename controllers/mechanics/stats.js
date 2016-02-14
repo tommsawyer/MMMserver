@@ -84,8 +84,8 @@ router.get('/stockinfo',     mw.requireCompanyAuth, (req, res, next) => {
             return next(new JSONError('error', 'Акции с таким айди не найдено', 404));
 
         var stockInfo = {
-            viewsInFeed: stock.viewsInFeed,
-            views: stock.views,
+            viewsInFeed: stock.viewsInFeed || 0,
+            views: stock.views || 0,
             subscribes: stock.getSubscribesCount(),
             uses: stock.getNumberOfUses(),
             reuses: stock.getNumberOfReUses()
