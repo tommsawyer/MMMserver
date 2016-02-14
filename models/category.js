@@ -9,7 +9,12 @@ module.exports = function (logger) {
         parentCategory: Schema.Types.ObjectId
     });
 
-
+    CategorySchema.methods.toJSON = function (){
+        return {
+            name: this.name,
+            parentCategory: this.parentCategory
+        }
+    };
 
     CategorySchema.statics.toJSON = function (callback) {
         this.find({}, (err, categories) => {

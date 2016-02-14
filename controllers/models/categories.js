@@ -56,4 +56,15 @@ router.post('/unsubscribe', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/filter/search', mw.requireClientAuth, (req, res, next) => {
+    req.logger.info('Ищу категории по запросу ' + req.query.searchword);
+    var searchRegExp = new RegExp('.*' + req.query.searchword + '.*', 'i');
+
+    Category.find({name: {$regex: searchRegExp}}, (err, categories) => {
+        if (err) return next(err);
+
+        res.JSONAnswer('categories', categories.map((category) => category.toJSON()));
+    });
+});
+
 module.exports = router;
