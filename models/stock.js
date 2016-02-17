@@ -350,6 +350,24 @@ module.exports = function (logger) {
             (this.company._id == companyID.toString());
     };
 
+    StockSchema.methods.getSubscribesByDays = function* () {
+        var filteredSubcribes = {};
+
+        this.subscribes.forEach(function(subscribe) {
+            var subscribeDay = subscribe.date.toDateString();
+            filteredSubcribes[subscribeDay] = filteredSubcribes[subscribeDay] || [];
+            filteredSubcribes[subscribeDay].push(subscribe);
+        });
+
+        for (var subcribeDay in filteredSubcribes)
+        {
+            yield {
+                day: subcribeDay,
+                subcribes: filteredSubcribes[subcribeDay]
+            }
+        }
+    };
+
     StockSchema.methods.prepareRemove = function (callback) {
         var subscribers = this.subscribes;
         var self = this;

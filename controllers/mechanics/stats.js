@@ -62,8 +62,10 @@ router.get('/countperstock', mw.requireCompanyAuth, (req, res, next) => {
 
         var data = {};
 
-        Stock.arrayToJSON(stocks).forEach((stock) => {
-           data[stock.name] = stock.subscribes.length;
+        stocks.forEach((stock) => {
+            data[stock.name] = stock.getSubscriptionDates().map((date) => {
+                return date.toDateString();
+            });
         });
 
         res.JSONAnswer('countperstock', data);
@@ -117,4 +119,5 @@ router.get('/numberofuses',  mw.requireCompanyAuth, (req, res, next) => {
        res.JSONAnswer('numberofuses', datesAndUses);
    });
 });
+
 module.exports = router;
