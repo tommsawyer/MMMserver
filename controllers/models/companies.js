@@ -110,4 +110,12 @@ router.get('/filter/search', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/subscriptions', mw.requireClientAuth, (req, res, next) => {
+    Company.find({_id: {$in: req.user.filters.companies}}, (err, companies) => {
+        if (err) return next(err);
+
+        res.JSONAnswer('companies', companies.map((company) => {return company.toJSON()}));
+    });
+});
+
 module.exports = router;

@@ -67,4 +67,12 @@ router.get('/filter/search', mw.requireClientAuth, (req, res, next) => {
     });
 });
 
+router.get('/subscriptions', mw.requireClientAuth, (req, res, next) => {
+    Category.find({_id: {$in: req.user.filters.categories}}, (err, categories) => {
+        if (err) return next(err);
+
+        res.JSONAnswer('category', categories.map((category) => {return category.toJSON()}));
+    });
+});
+
 module.exports = router;
