@@ -3,6 +3,7 @@ module.exports = function (logger) {
     var Schema    = mongoose.Schema;
     var JSONError = require('../lib/json_error');
     var SHA256    = require('crypto-js/sha256');
+    var dateHelper = require('../utils/dateHelper');
 
     var UserSchema = new Schema({
         login: {
@@ -33,7 +34,7 @@ module.exports = function (logger) {
             logger.info('Токен пользователя ' + this.login + ' устарел или не существует');
             this.token = {
                 createdAt: new Date(),
-                expiredAt: new Date(new Date().setDate(new Date().getDate() + 10)),
+                expiredAt: dateHelper.getDateAfter(10),
                 value: SHA256(this.hashedPassword + this.login)
             };
             logger.info('Сгенерировал новый токен(' + this.token.value + ')');
