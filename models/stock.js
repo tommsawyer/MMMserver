@@ -27,7 +27,7 @@ module.exports = function (logger) {
             id: Schema.Types.ObjectId,
             date: Date,
             code: String,
-            numberOfUses: Number
+            numberOfUses: [Date]
         }]
     });
 
@@ -99,7 +99,7 @@ module.exports = function (logger) {
     StockSchema.methods.incrementNumberOfUses = function (code) {
         for (var i=0; i < this.subscribes.length; i++) {
             if (this.subscribes[i].code == code) {
-                this.subscribes[i].numberOfUses++;
+                this.subscribes[i].numberOfUses.push(new Date());
                 this.save();
                 return true;
             }
@@ -396,18 +396,14 @@ module.exports = function (logger) {
     };
 
     StockSchema.methods.getNumberOfUses = function () {
-        var numberOfUses = 0;
-
-        this.subscribes.forEach((subscribe) => {
-           numberOfUses += subscribe.numberOfUses > 0 ? 1 : 0;
+        return this.subscribes.reduce((totalUsesAmount, subscribe) => {
+            return totalUsesAmount + subscribe.numberOfUses.length;
         });
-
-        return numberOfUses;
     };
 
     StockSchema.methods.getNumberOfReUses = function() {
        return this.subscribes.filter((subscribe) => {
-           return subscribe.numberOfUses > 1;
+           return subscribe.numberOfUses.length > 1;
        }).length
     };
 

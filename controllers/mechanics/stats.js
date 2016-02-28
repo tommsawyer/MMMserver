@@ -41,17 +41,12 @@ router.get('/usersperstock', mw.requireCompanyAuth, (req, res, next) => {
         if (err) return next(err);
         if (!stock) return next(new JSONError('usersperstock', 'Такой акции не найдено', 404));
 
-        var dates = {};
         var stats = {};
-
-        stock.subscribes.forEach((subscr) => {
-            var date = subscr.date.toDateString();
-            dates[date] = dates[date] + 1 || 1;
+        stats[stock.name] = stock.getSubscriptionDates().map((date) => {
+            return date.toDateString();
         });
 
-        stats[stock.name] = dates;
-
-        res.JSONAnswer('usersperstock', dates);
+        res.JSONAnswer('usersperstock', stats);
     });
 });
 
@@ -108,18 +103,16 @@ router.get('/numberofuses',  mw.requireCompanyAuth, (req, res, next) => {
            return res.JSONAnswer('numberofuses', {});
        }
 
-       var datesAndUses = {};
+       var stats = {};
 
        stocks.forEach((stock) => {
+           stats[stock.name] = [];
            stock.subscribes.forEach((subscribe) => {
-               var subscribeDay = subscribe.date.toDateString();
-               var numberOfUses = subscribe.numberOfUses || 0;
-
-               datesAndUses[subscribeDay] = datesAndUses[subscribeDay] + numberOfUses || numberOfUses;
+               stats[stock.name] = stats[stock.name].concat(subscribe.numberOfUses.map(date => date.toDateString()));
            });
        });
 
-       res.JSONAnswer('numberofuses', datesAndUses);
+       res.JSONAnswer('numberofuses', stats);
    });
 });
 
