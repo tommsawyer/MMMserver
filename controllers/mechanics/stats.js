@@ -42,11 +42,14 @@ router.get('/usersperstock', mw.requireCompanyAuth, (req, res, next) => {
         if (!stock) return next(new JSONError('usersperstock', 'Такой акции не найдено', 404));
 
         var dates = {};
+        var stats = {};
 
         stock.subscribes.forEach((subscr) => {
             var date = subscr.date.toDateString();
             dates[date] = dates[date] + 1 || 1;
         });
+
+        stats[stock.name] = dates;
 
         res.JSONAnswer('usersperstock', dates);
     });
