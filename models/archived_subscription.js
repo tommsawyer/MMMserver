@@ -12,7 +12,7 @@ module.exports = function(logger) {
         userID:           Schema.Types.ObjectId,
         companyID:        Schema.Types.ObjectId,
         stockID:          Schema.Types.ObjectId,
-        numberOfUses:     Number
+        numberOfUses:     [Date]
     });
 
     ArchivedSubscriptionSchema.statics.archive = function(companyID, stockID, subscription) {
@@ -26,7 +26,7 @@ module.exports = function(logger) {
             numberOfUses:     subscription.numberOfUses,
             code:             subscription.code
         }, (err) => {
-            if (err) logger(err);
+            if (err) logger.error(err);
         });
     };
 
