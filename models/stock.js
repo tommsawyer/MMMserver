@@ -398,7 +398,7 @@ module.exports = function (logger) {
     StockSchema.methods.getNumberOfUses = function () {
         return this.subscribes.reduce((totalUsesAmount, subscribe) => {
             return totalUsesAmount + subscribe.numberOfUses.length;
-        });
+        }, 0);
     };
 
     StockSchema.methods.getNumberOfReUses = function() {
