@@ -22,7 +22,7 @@ module.exports = function (logger) {
     });
 
     CompanySchema.methods.toJSON = function () {
-        var company =  {
+        var companyJSON =  {
             id: this._id,
             name: this.name,
             INN: this.INN,
@@ -33,13 +33,14 @@ module.exports = function (logger) {
             logo: this.logo
         };
 
-        return company;
+        return companyJSON;
     };
 
     CompanySchema.methods.createImages = function(filename){
         if (!filename) {
             return;
         }
+
         this.logo = '/companies/' + filename;
     };
 
@@ -49,59 +50,96 @@ module.exports = function (logger) {
     };
 
     CompanySchema.methods.setActivationHash = function(hash) {
-        this.active = false;
-        this.activationHash = hash;
-        logger.info('Установил компании ' + this._id + ' хэш для активации (' + hash + ')');
-        this.save();
-    };
+        var self = this;
 
-    CompanySchema.methods.activate = function() {
-        this.activationHash = null;
-        this.active = true;
-        logger.info('Компания с id ' + this._id + ' активировала е-майл')
-        this.save();
-    };
+        self.active = false;
+        self.activationHash = hash;
+        logger.info('Установил компании ' + self._id + ' хэш для активации (' + hash + ')');
 
-    CompanySchema.methods.addSubscriber = function (id, callback) {
-        if (this.subscribers.indexOf(id) != -1) {
-            return callback(new JSONError('error', 'Этот пользователь уже есть в подписчиках'));
-        }
-
-        this.subscribers.push(id);
-        logger.info('Добавляю пользователя ' + id.toString() + ' к подписчикам компании ' + this._id.toString());
-        this.save();
-        callback(null);
-    };
-
-    CompanySchema.methods.removeSubscriber = function (id, callback) {
-        var userPosition = this.subscribers.indexOf(id);
-        if (userPosition == -1) {
-            return callback(new JSONError('error', 'Этого пользователя нет в подписчиках'));
-        }
-
-        this.subscribers.splice(userPosition, 1);
-        logger.info('Удаляю пользователя ' + id.toString() + ' из подписчиков компании ' + this._id.toString());
-        this.save();
-        callback(null);
-    };
-
-    CompanySchema.statics.tryActivateByHash = function(hash, callback) {
-        this.findOne({'activationHash': hash}, (err, company) => {
-            if (err) {
-                callback(err);
-                return;
-            }
-
-            if (!company){
-                callback(new Error('Нет такой компании или уже активирована'));
-                return;
-            }
-
-            company.activate();
-            callback(null, company);
+        return new Promise(function(resolve, reject) {
+            self.save((err) => {
+                if (err) return reject(err);
+                resolve();
+            });
         });
     };
 
+    CompanySchema.methods.activate = function() {
+        var self = this;
+
+        this.activationHash = null;
+        this.active = true;
+
+        return new Promise(function(resolve, reject) {
+            self.save((err) => {
+                if (err) reject(err);
+
+                logger.info('Компания с id ' + this._id + ' активировала е-майл')
+                resolve();
+            })
+        });
+    };
+
+    CompanySchema.methods.isSubscribed = function (userID) {
+        return this.subscribers.indexOf(userID) !== -1;
+    };
+
+    CompanySchema.methods.addSubscriber = function (subscriberID) {
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+            if (self.isSubscribed(subscriberID)) {
+                return reject(new JSONError('error', 'Этот пользователь уже есть в подписчиках'));
+            }
+
+            self.subscribers.push(subscriberID);
+            self.save((err) => {
+                if (err) return reject(err);
+
+                logger.info('Добавил пользователя ' + subscriberID.toString() + ' к подписчикам компании ' + self._id.toString());
+                resolve();
+            });
+        });
+    };
+
+    CompanySchema.methods.removeSubscriber = function (subcriberID) {
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+            if (!self.isSubscribed(subscriberID)) {
+                return reject(new JSONError('error', 'Этого пользователя нет в подписчиках'));
+            }
+
+            this.subscribers.splice(self.subscribers.indexOf(subcriberID), 1);
+            this.save((err) => {
+                if (err) return reject(err);
+
+                logger.info('Удалил пользователя ' + id.toString() + ' из подписчиков компании ' + this._id.toString());
+                resolve();
+            });
+        });
+    };
+
+    CompanySchema.statics.findAndActivateByHash = function(hash) {
+        var self = this,
+            searchQuery = {
+                activationHash: hash
+            };
+
+        return new Promise(function(resolve, reject) {
+            self.findOne(searchQuery, (err, company) => {
+                if (err) return reject(err);
+
+                if (!company) 
+                    return reject(new Error('Нет такой компании или уже активирована'));
+
+                return company.activate();
+            });
+        });
+
+    };
+
+    // Наследование от общего абстрактного класса
     User.discriminator('Company', CompanySchema);
     logger.info('Подключил модель Company');
 };

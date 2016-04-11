@@ -1,9 +1,9 @@
 module.exports = function (logger) {
-    var mongoose  = require('mongoose');
-    var Schema    = mongoose.Schema;
-    var JSONError = require('../lib/json_error');
-    var SHA256    = require('crypto-js/sha256');
-    var dateHelper = require('../utils/dateHelper');
+    var mongoose   = require('mongoose'),
+        Schema     = mongoose.Schema,
+        JSONError  = require('../lib/json_error'),
+        SHA256     = require('crypto-js/sha256'),
+        dateHelper = require('../utils/dateHelper');
 
     var UserSchema = new Schema({
         login: {

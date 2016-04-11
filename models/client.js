@@ -1,9 +1,9 @@
 module.exports = function (logger) {
-    var mongoose  = require('mongoose');
-    var Schema    = mongoose.Schema;
-    var ObjectID  = require('mongodb').ObjectID;
-    var JSONError = require('../lib/json_error');
-    var User      = mongoose.model('User');
+    var mongoose  = require('mongoose'),
+        Schema    = mongoose.Schema,
+        ObjectID  = require('mongodb').ObjectID,
+        JSONError = require('../lib/json_error'),
+        User      = mongoose.model('User');
 
     var ClientSchema = new Schema({
         address: String,

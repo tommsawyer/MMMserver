@@ -1,7 +1,7 @@
-var SEC = 1000;
-var MIN = 60 * SEC;
-var HOUR = 60 * MIN;
-var DAY = 24 * HOUR;
+var SEC = 1000,
+    MIN = 60 * SEC,
+    HOUR = 60 * MIN,
+    DAY = 24 * HOUR;
 
 module.exports = {
     tryParseDate: function(date) {
@@ -13,9 +13,11 @@ module.exports = {
         }
     },
 
-    checkDates: function(startDate, endDate) {
+    isCurrentDateBetween: function(startDate, endDate) {
         var currentDate = new Date();
-        return startDate && endDate && startDate < endDate && endDate > currentDate;
+        return startDate && endDate && 
+               startDate < endDate && 
+               endDate   > currentDate;
     },
 
     getDateAfter: function(days, hours, minutes, seconds, milliseconds) {
