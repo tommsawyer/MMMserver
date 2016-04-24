@@ -8,6 +8,17 @@ var router    = express.Router();
 router.get('/check', mw.requireCompanyAuth, (req, res, next) => {
     var code = req.query.code;
 
+    Stock.getStocksBySubscriptionCode(code)
+        .then(function(stocks) {
+            stock.getSubscriberBySubscriptionCode(code)
+                .then(function(user) {
+
+                });
+        })
+        .catch(function(error) {
+           next(error);
+        });
+
     Stock.bySubscriptionCode(code, (err, stock) => {
         if (err) return next(err);
 

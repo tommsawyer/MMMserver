@@ -33,9 +33,8 @@ module.exports = function (logger) {
 
     /* Подписки */
 
-
     StockSchema.statics.generateSubscription = function(userID) {
-        var code = Math.round(Math.random() * Math.pow(10, 10)).toString();
+        var code = Math.round(Math.random() * 10e9).toString();
         logger.info('Сгенерировал код подписки на акцию: ' + code);
         return {
             id: userID,

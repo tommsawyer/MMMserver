@@ -3,6 +3,7 @@ module.exports = function (logger) {
         Schema    = mongoose.Schema,
         ObjectID  = require('mongodb').ObjectID,
         JSONError = require('../lib/json_error'),
+        FriendsController = require('./mechanics/friends');
         User      = mongoose.model('User');
 
     var ClientSchema = new Schema({
@@ -151,31 +152,6 @@ module.exports = function (logger) {
         this.save();
     };
 
-    ClientSchema.methods.addFriend = function(id, callback) {
-        if (this.friends.indexOf(id) == -1) {
-            this.friends.push(id);
-            this.save();
-            callback(null);
-        } else {
-            callback(new JSONError('error', 'Этот пользователь уже в друзьях'));
-        }
-    };
-
-    ClientSchema.methods.removeFriend = function(id, callback) {
-        var idPosition = this.friends.indexOf(id);
-        if (idPosition == -1) {
-            callback(new JSONError('error', 'Этого пользователя нет в друзьях'));
-        } else {
-            this.friends.slice(idPosition, 1);
-            this.save();
-            callback(null);
-        }
-    };
-
-    ClientSchema.methods.isInFriends = function(id) {
-        return this.friends.indexOf(id) != -1;
-    };
-
     ClientSchema.methods.toJSON = function (){
         var info = {
             'id': this._id,
@@ -243,6 +219,11 @@ module.exports = function (logger) {
             }));
         });
     };
+
+    ClientSchema.post('init', (model, next) => {
+        model.friendsController = new FriendsController(model);
+        next();
+    });
 
     User.discriminator('Client', ClientSchema);
     logger.info('Подключил модель Client');

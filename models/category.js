@@ -1,7 +1,7 @@
 module.exports = function (logger) {
-    var mongoose = require('mongoose');
-    var Schema = mongoose.Schema;
-    var ObjectID = require('mongodb').ObjectID;
+    var mongoose  = require('mongoose');
+    var Schema    = mongoose.Schema;
+    var ObjectID  = require('mongodb').ObjectID;
     var JSONError = require('../lib/json_error');
 
     var CategorySchema = new Schema({
@@ -14,6 +14,12 @@ module.exports = function (logger) {
             name: this.name,
             parentCategory: this.parentCategory
         }
+    };
+
+    CategorySchema.statics.createJsonFromAllCategories = function() {
+        return new Promise(function(resolve, reject) {
+
+        });
     };
 
     CategorySchema.statics.toJSON = function (callback) {
