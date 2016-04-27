@@ -23,5 +23,17 @@ module.exports = {
     getDateAfter: function(days, hours, minutes, seconds, milliseconds) {
         var ms = (days * DAY || 0) + (hours * HOUR|| 0) + (minutes * MIN || 0) + (seconds * SEC || 0) + (milliseconds || 0);
         return new Date(Date.now() + ms);
+    },
+
+    addMinutes: function(startDate, minutes) {
+        return new Date(startDate.getTime() + minutes*MIN);
+    },
+
+    addHours: function(startDate, hours) {
+        return new Date(startDate.getTime() + hours*HOUR);
+    },
+
+    addDays: function(startDate, days) {
+        return new Date(startDate.getTime() + days*DAY);
     }
 }
