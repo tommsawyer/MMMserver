@@ -199,6 +199,8 @@ router.get('/all', mw.requireClientAuth, (req, res, next) => {
         if (stocks.length == 0)
             res.JSONAnswer('stock', []);
 
+        Stock.incrementFeedViewsInArray(stocks);
+
         res.JSONAnswer('stock', Stock.arrayToJSON(stocks, req.user._id));
     });
 });
