@@ -41,7 +41,7 @@ module.exports = function (logger) {
             id: userID,
             date: new Date(),
             code: code,
-            numberOfUses: 0
+            numberOfUses: []
         }
     };
 
