@@ -83,3 +83,5 @@ module.exports = function (logger) {
     mongoose.model('User', UserSchema);
     logger.info('Подключил абстрактный класс для компании и клиента');
 };
+
+//какой-то новый комментарий
